@@ -6,6 +6,7 @@ const commandData: HnmCommandData = {
     name: "Adamantoise",
     timerFormat: ":turtle:",
     isKing: true,
+    isGW: false,
     hq: "Aspidochelone"
 }
 

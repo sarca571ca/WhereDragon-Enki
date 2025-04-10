@@ -195,6 +195,7 @@ export async function processHNM(message: Message, hnmTimerData: HnmTimerData) {
     if (channel instanceof TextChannel && hnmTimerData.isValid) {
         await removeTimer(channel, hnmTimerData.name);
         await addTimer(channel, hnmTimer);
+        await sortTimersChannel(channel);
     }
 
     if (!hnmTimerData.isValid && hnmTimerData.reason) {
@@ -249,7 +250,53 @@ async function removeTimer(channel: TextChannel, hnmName: string) {
         });
     }
 }
+
 async function addTimer(channel: TextChannel, hnmTimer: string) {
     await channel.send(hnmTimer);
 }
 
+async function sortTimersChannel(channel: TextChannel) {
+    const messagesData: MessageWithDisplayName[] = await getMessageData(channel);
+    const messages: Collection<number, string> = new Collection;
+
+    for (const message of messagesData) {
+        const parsedTimeStamp: Date | null = parseDiscordTimestamp(message.content);
+        if (parsedTimeStamp) {
+            const utcTimeStamp: number = Date.UTC(
+                parsedTimeStamp.getUTCFullYear(),
+                parsedTimeStamp.getUTCMonth(),
+                parsedTimeStamp.getUTCDate(),
+                parsedTimeStamp.getUTCHours(),
+                parsedTimeStamp.getUTCMinutes(),
+                parsedTimeStamp.getUTCSeconds(),
+            )
+            messages.set(utcTimeStamp, message.content);
+        }
+    }
+
+    const sortedKeys = [...messages.keys()].sort((a, b) => {
+        return a - b;
+    });
+
+    const sortedMessages: Collection<number, string> = new Collection;
+
+    sortedKeys.forEach(key => {
+        sortedMessages.set(key, messages.get(key) as string);
+    });
+
+    for (const [_, content] of sortedMessages) {
+        if (content) {
+            await removeTimer(channel, extractHnmeNameFromTimerMessage(content))
+            await addTimer(channel, content);
+        }
+    }
+}
+
+export function extractHnmeNameFromTimerMessage(timerMessage: string): string {
+    const hnmNameMatch = timerMessage.match(/^- (\S+.+) :/);
+    let hnmName: string = "";
+    if (hnmNameMatch) {
+        hnmName = hnmNameMatch[1].toString();
+    }
+    return hnmName;
+}

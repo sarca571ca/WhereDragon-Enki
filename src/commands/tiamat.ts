@@ -1,16 +1,16 @@
 import { Message } from "discord.js";
 import { createHnmTimer } from "../utils/hnmUtils";
-import { HnmCommandData } from "../types/CommandData"
+import { HnmCommandData } from "../types/CommandData";
 
 const commandData: HnmCommandData = {
-    name: "King Arthro",
-    timerFormat: ":crab:",
+    name: "Tiamat",
+    timerFormat: ":fire::chicken::fire:",
     isKing: false,
-    isGW: false,
+    isGW: true,
 }
 
-export const name = "kingarthro";
-export const aliases = ["ka", "kinga"];
+export const name = "tiamat";
+export const aliases = ["tia"];
 export const execute = (message: Message, args: string[]) => {
     createHnmTimer(message, commandData, args);
 }

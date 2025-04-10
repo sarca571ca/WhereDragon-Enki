@@ -7,6 +7,7 @@ import { watchChatLogsForTods } from "./tod-watcher";
 dotenv.config();
 
 modules.loadEvents(client)
+modules.loadTasks(client)
 modules.loadCommands(client)
 
 watchChatLogsForTods();
