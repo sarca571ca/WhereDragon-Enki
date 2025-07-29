@@ -1,16 +1,19 @@
 import test from "tape";
-import { channelMessagesToWindows } from "../helpers/channelToDKP";
-import { loadJsonFile } from "../helpers/utils";
+import { channelMessagesToWindows } from "../utils/channelToDKP";
+import { loadJsonFile } from "../utils/utils";
 import { TextChannel, Message } from "discord.js";
-import { writeToJSONFile } from "..";
+import { MessageWithDisplayName } from "../types/MessageData";
 
 test("Nov13 KA Test", async (t) => {
   const mockKingsChannel = loadJsonFile(
     "test_data/nov13-ka.json"
-  ) as TextChannel & { messages: Message[] };
+  ) as TextChannel & { messages: MessageWithDisplayName[] };
+
   const { windowsPerMember: parsedWindowsPerMember } =
     channelMessagesToWindows(mockKingsChannel);
+
   // await writeToJSONFile(parsedWindowsPerMember);
+
   t.deepEqual(parsedWindowsPerMember, {
     Tarnish: {
       windows: 1,
@@ -384,7 +387,7 @@ test("Nov15 KV", async (t) => {
     Avelain: {
       windows: 1,
       message: "x",
-      xClaim: true,
+      xClaim: false,
       xKill: true,
       checkForError: false,
       timestamp: "2024-11-15 08:00:12",
@@ -392,7 +395,7 @@ test("Nov15 KV", async (t) => {
     Draxzy: {
       windows: 1,
       message: "x",
-      xClaim: true,
+      xClaim: false,
       xKill: true,
       checkForError: false,
       timestamp: "2024-11-15 08:01:39",
@@ -400,7 +403,7 @@ test("Nov15 KV", async (t) => {
     Chaosmage: {
       windows: 1,
       message: "x",
-      xClaim: true,
+      xClaim: false,
       xKill: true,
       checkForError: false,
       timestamp: "2024-11-15 08:02:08",
@@ -408,7 +411,7 @@ test("Nov15 KV", async (t) => {
     Switchstance: {
       windows: 1,
       message: "x",
-      xClaim: true,
+      xClaim: false,
       xKill: true,
       checkForError: false,
       timestamp: "2024-11-15 08:07:24",
@@ -416,7 +419,7 @@ test("Nov15 KV", async (t) => {
     Lilsheck: {
       windows: 1,
       message: "x barrymckochinor",
-      xClaim: true,
+      xClaim: false,
       xKill: true,
       checkForError: false,
       timestamp: "2024-11-15 08:09:05",
@@ -424,7 +427,7 @@ test("Nov15 KV", async (t) => {
     Barbar: {
       windows: 1,
       message: "x",
-      xClaim: true,
+      xClaim: false,
       xKill: false,
       checkForError: false,
       timestamp: "2024-11-15 08:09:39",
@@ -432,7 +435,7 @@ test("Nov15 KV", async (t) => {
     Arturiel: {
       windows: 1,
       message: "x",
-      xClaim: true,
+      xClaim: false,
       xKill: true,
       checkForError: false,
       timestamp: "2024-11-15 08:15:44",
@@ -440,7 +443,7 @@ test("Nov15 KV", async (t) => {
     Whereami: {
       windows: 1,
       message: "x",
-      xClaim: true,
+      xClaim: false,
       xKill: true,
       checkForError: false,
       timestamp: "2024-11-15 08:23:12",
@@ -448,7 +451,7 @@ test("Nov15 KV", async (t) => {
     Mathrandir: {
       windows: 1,
       message: "x",
-      xClaim: true,
+      xClaim: false,
       xKill: true,
       checkForError: false,
       timestamp: "2024-11-15 08:34:11",
@@ -561,29 +564,21 @@ test("Nov15 KA", async (t) => {
     channelMessagesToWindows(mockKingsChannel);
   // await writeToJSONFile(parsedWindowsPerMember);
   t.deepEqual(parsedWindowsPerMember, {
-    Nuke: {
+    dapang: {
       windows: 1,
-      message: "x",
+      message: "x-for-dapang",
       xClaim: true,
       xKill: true,
       checkForError: false,
       timestamp: "2024-11-15 18:17:17",
     },
-    Etra: {
+    super: {
       windows: 1,
-      message: "x",
+      message: "x-for-super",
       xClaim: true,
       xKill: true,
       checkForError: false,
-      timestamp: "2024-11-15 18:17:39",
-    },
-    Thris: {
-      windows: 1,
-      xClaim: false,
-      xKill: false,
-      message: "x -> x out",
-      checkForError: false,
-      timestamp: "2024-11-15 19:19:15",
+      timestamp: "2024-11-15 18:19:26",
     },
     Ancestor: {
       windows: 1,

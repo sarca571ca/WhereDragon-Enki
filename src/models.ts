@@ -20,7 +20,8 @@ export type HNMTypeChannelKeys =
   | "tia"
   | "shi"
   | "sim"
-  | "beh";
+  | "beh"
+  | "bs";
 
 export const HNMTypeChannelKeyToSheetStringMap: {
   [key: string]: string;
@@ -36,6 +37,7 @@ export const HNMTypeChannelKeyToSheetStringMap: {
   vrt: "Vrtra",
   vrtra: "Vrtra",
   jorm: "Jorm",
+  bs: "Bloodsucker",
 };
 
 export const KingHNMTypeChannelKeyToSheetStringMap: {

@@ -10,6 +10,7 @@ const SCOPES = [`${process.env.SCOPES_URL}`];
 // The ID of the spreadsheet to update
 const SPREADSHEET_ID = process.env.SPREADSHEET_ID;
 const SHEET_NAME = "DKP Entry";
+const SIGN_UP_SHEET_NAME = "Camp Sign Ups";
 
 const auth = new google.auth.GoogleAuth({
   keyFile: CREDENTIALS_PATH,
@@ -20,6 +21,16 @@ const auth = new google.auth.GoogleAuth({
 /** DO NOT WANT TO RISK WRITING TO THE WRONG SHEET AND CLEARING OUT DATA */
 
 const sheets = google.sheets({ version: "v4", auth });
+
+const SIGN_UP_HNM_RANGE_MAP: Record<string, string> = {
+  "kv-signup": `${SIGN_UP_SHEET_NAME}!A4:C50`,
+  "shiki-signup": `${SIGN_UP_SHEET_NAME}!E4:G50`,
+  "bloodsucker-signup": `${SIGN_UP_SHEET_NAME}!I4:K50`,
+  "jorm-signup": `${SIGN_UP_SHEET_NAME}!Q4:S50`,
+  "vrtra-signup": `${SIGN_UP_SHEET_NAME}!M4:O50`,
+};
+
+const emojiRegex = /[\p{Emoji_Presentation}|\p{Extended_Pictographic}]/gu;
 
 export const WDSheetsAPI = {
   clear: async (range: string) => {
@@ -65,6 +76,31 @@ export const WDSheetsAPI = {
     });
 
     console.log(`Cells updated: ${response.data.totalUpdatedRows}`);
+  },
+  readSignupSheet: async (
+    channelName:
+      | "kv-signup"
+      | "shiki-signup"
+      | "bloodsucker-signup"
+      | "jorm-signup"
+      | "vrtra-signup"
+  ) => {
+    const response = await sheets.spreadsheets.values.get({
+      spreadsheetId: SPREADSHEET_ID,
+      range: SIGN_UP_HNM_RANGE_MAP[channelName.replace(emojiRegex, "").trim()],
+    });
+
+    const data = response.data.values || [];
+    const kvMap: Record<string, { priority: string; date: string }> = {};
+
+    console.log("??", data);
+    data.forEach(([name, priority, date]) => {
+      if (name && priority) {
+        kvMap[name.trim()] = { priority: priority.trim(), date: date?.trim() };
+      }
+    });
+
+    return kvMap;
   },
 };
 

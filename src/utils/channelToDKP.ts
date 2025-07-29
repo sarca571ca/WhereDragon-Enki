@@ -1,6 +1,7 @@
-import { Message, TextChannel } from "discord.js";
-import { formatTimestampToDate } from "./utils";
+import { TextChannel } from "discord.js";
 import { ParsedWindowsPerMember, HNMTypeChannelKeys } from "../models";
+import { MessageWithDisplayName } from "../types/MessageData";
+import { getDateDataFromUnixTimeStamp } from "./timeUtils";
 
 export const channelHeaderRows = (channel: { name: string }) => {
   return buildHeaderRowsToDelimitedCSV(
@@ -11,6 +12,7 @@ export const channelHeaderRows = (channel: { name: string }) => {
   );
 };
 
+// NOTE: Assuming this gets fleshed out later on?
 export const channelPlayerRows = (channel: { name: string }) => {
   return buildPlayerWindowRowsToDelimitedCSV({
     Syragon: 1,
@@ -46,6 +48,40 @@ export const extractNumberAfterX = (s: string): number | null => {
   }
 };
 
+export type XMsgType =
+  | "X"
+  | "X-POP"
+  | "X-KILL"
+  | "X-CLAIM"
+  | "X-OUT"
+  | "X-SCOUT"
+  | "INVALID";
+
+const getMessageType: (message: string) => XMsgType = (message) => {
+  const msg = message.toLocaleLowerCase().trim();
+  // TODO: Make less strict and use in diff HNM types. For now this is for KV only
+  switch (true) {
+    case msg === "x-pop":
+      return "X-POP";
+    case msg === "x-kill" || validXKillPattern.test(msg):
+      return "X-KILL";
+    case msg === "x-claim":
+      return "X-CLAIM";
+    case msg === "x-out":
+      return "X-OUT";
+    case msg === "x-scout":
+      return "X-SCOUT";
+    case msg === "x-forgot":
+    case msg === "x":
+      return "X";
+    case (validFirstXinPattern.test(msg) && !msg.includes("kill")) ||
+      (msg.includes("x") && msg.includes("forgot")):
+      return "X";
+    default:
+      return "INVALID";
+  }
+};
+
 export const validJobXinPattern =
   /^x.*?(scout|tod|blm|rdm|whm|rng|sam|nin|mnk|war|bst|drk|pld|brd|smn|drg|thf)\b/i;
 export const validXKillPatternTiamat =
@@ -55,7 +91,7 @@ export const validFirstXinPattern =
   /^x-?\s*(?:(?!(?<!sc)out\b)(?![0-9])([^(]\S+\s+scout|\w+(?:\s+\w+)*|\([^)]+\))?)?$/i;
 
 export const channelMessagesToWindows = (
-  channel: TextChannel & { messages: any[] },
+  channel: TextChannel & { messages: MessageWithDisplayName[] },
   popWindow?: number,
   validTiamatWindows?: number[]
 ): { windowsPerMember: ParsedWindowsPerMember; enkiResponse: string } => {
@@ -65,21 +101,37 @@ export const channelMessagesToWindows = (
   const windowsPerMember: ParsedWindowsPerMember = {};
   let enkiResponse: string = "Done.";
 
+  const memberOnlyMessages = channel.messages.filter((msg) => !msg.author.bot);
+
   switch (channelHNMTypeKey) {
+    case "bs":
     case "sim":
     case "shi":
-    case "ka":
-      channel.messages.forEach((message) => {
-        const memberName =
+    case "ka": {
+      memberOnlyMessages.forEach((message) => {
+        let memberName =
           message.memberDisplayName ??
           message.author.globalName ??
           message.author.username;
         const messageContent = message.content.trim().toLocaleLowerCase();
+
+        const xInFor = extractXinForMember(messageContent);
+        const xOutFor = extractXOutFor(messageContent);
+
+        if (xInFor !== null) {
+          memberName = xInFor;
+        }
+
+        if (xOutFor !== null) {
+          memberName = xOutFor;
+        }
+
         if (!windowsPerMember[memberName]) {
           const windowNumberForXIn = extractNumberAfterX(messageContent);
           // eg "x"
           // todo: add admin :greencheck: check for scouts
           if (
+            xInFor ||
             messageContent === "x" ||
             (messageContent.includes("x") &&
               (messageContent.includes("scout") ||
@@ -92,7 +144,9 @@ export const channelMessagesToWindows = (
               xClaim: true,
               xKill: true,
               checkForError: false,
-              timestamp: formatTimestampToDate(message.createdTimestamp),
+              timestamp: getDateDataFromUnixTimeStamp(
+                message.createdTimestamp
+              ).toString(),
             };
             // eg "x forgot" "x-forgot"
           } else if (
@@ -105,34 +159,39 @@ export const channelMessagesToWindows = (
               xKill: true,
               message: messageContent,
               checkForError: true,
-              timestamp: formatTimestampToDate(message.createdTimestamp),
+              timestamp: getDateDataFromUnixTimeStamp(
+                message.createdTimestamp
+              ).toString(),
             };
           }
         }
 
         // eg. "x-out"
-        if (windowsPerMember[memberName]) {
+        if (xOutFor && windowsPerMember[memberName]) {
           if (
             messageContent.includes("x") &&
             messageContent.includes("out") &&
             !messageContent.includes("scout")
           ) {
             windowsPerMember[memberName] = {
-              windows: 1,
+              windows: 0,
               xClaim: false,
               xKill: false,
               message: `${
                 windowsPerMember[memberName].message
               } -> ${messageContent.trim()}`,
               checkForError: false,
-              timestamp: formatTimestampToDate(message.createdTimestamp),
+              timestamp: getDateDataFromUnixTimeStamp(
+                message.createdTimestamp
+              ).toString(),
             };
           }
         }
       });
 
       return { windowsPerMember, enkiResponse };
-    case "tia":
+    }
+    case "tia": {
       const { validWindows, invalidWindows } = splitWindowsIntoValidInvalid(
         channel,
         validTiamatWindows
@@ -172,6 +231,7 @@ export const channelMessagesToWindows = (
         let windowTimedOutForXIns = false;
         let popMsgTimestamp = 0;
         windowCheckedInMembers = [];
+        // FIXME: Find the type.
         window.forEach((message: any) => {
           const memberName =
             message.memberDisplayName ??
@@ -217,7 +277,9 @@ export const channelMessagesToWindows = (
                 checkForError: false,
                 xClaim: isLastWindow, // is checked for claimed flag Tiamat at final step to get credit
                 xKill: isLastWindow,
-                timestamp: formatTimestampToDate(message.createdTimestamp),
+                timestamp: getDateDataFromUnixTimeStamp(
+                  message.createdTimestamp
+                ).toString(),
               };
             } else {
               windowCheckedInMembers.push(memberName);
@@ -227,9 +289,8 @@ export const channelMessagesToWindows = (
               windowsPerMember[
                 memberName
               ].message = `${windowsPerMember[memberName].message} | ${messageContent}`;
-              windowsPerMember[memberName].timestamp = formatTimestampToDate(
-                message.createdTimestamp
-              );
+              windowsPerMember[memberName].timestamp =
+                getDateDataFromUnixTimeStamp(message.createdTimestamp);
             }
           } else if (
             (validXKillPatternTiamat.test(messageContent) ||
@@ -244,7 +305,9 @@ export const channelMessagesToWindows = (
                 checkForError: false,
                 xClaim: false,
                 xKill: true,
-                timestamp: formatTimestampToDate(message.createdTimestamp),
+                timestamp: getDateDataFromUnixTimeStamp(
+                  message.createdTimestamp
+                ).toString(),
               };
             } else {
               windowCheckedInMembers.push(memberName);
@@ -253,17 +316,18 @@ export const channelMessagesToWindows = (
               windowsPerMember[
                 memberName
               ].message = `${windowsPerMember[memberName].message} | ${messageContent}`;
-              windowsPerMember[memberName].timestamp = formatTimestampToDate(
-                message.createdTimestamp
-              );
+              windowsPerMember[memberName].timestamp =
+                getDateDataFromUnixTimeStamp(message.createdTimestamp);
             }
           }
         });
       });
+
       return { windowsPerMember, enkiResponse };
+    }
     case "beh":
     case "faf":
-    case "ada":
+    case "ada": {
       const isKingsChannel = true;
       const windows = splitMessagesIntoWindows(
         channel.messages,
@@ -286,13 +350,23 @@ export const channelMessagesToWindows = (
 
       windows.forEach((window, windowIndex) => {
         window.forEach((message: any) => {
-          const memberName =
+          let memberName =
             message.memberDisplayName ??
             message.author.globalName ??
             message.author.username;
           if (memberName === "Alise") return;
 
           const messageContent = message.content.trim().toLocaleLowerCase();
+          const xInFor = extractXinForMember(messageContent);
+          const xOutFor = extractXOutFor(messageContent);
+
+          if (xInFor !== null) {
+            memberName = xInFor;
+          }
+
+          if (xOutFor !== null) {
+            memberName = xOutFor;
+          }
 
           const isXOut =
             messageContent.includes("x") &&
@@ -308,6 +382,7 @@ export const channelMessagesToWindows = (
           if (
             !validXKill &&
             (firstWindowXIn ||
+              xInFor ||
               (windowNumberForXIn === 1 && !windowsPerMember[memberName]))
           ) {
             windowsPerMember[memberName] = {
@@ -316,7 +391,9 @@ export const channelMessagesToWindows = (
               xClaim: true,
               xKill: true,
               checkForError: false,
-              timestamp: formatTimestampToDate(message.createdTimestamp),
+              timestamp: getDateDataFromUnixTimeStamp(
+                message.createdTimestamp
+              ).toString(),
             };
           }
 
@@ -334,12 +411,14 @@ export const channelMessagesToWindows = (
               checkForError: false,
               xClaim: true,
               xKill: true,
-              timestamp: formatTimestampToDate(message.createdTimestamp),
+              timestamp: getDateDataFromUnixTimeStamp(
+                message.createdTimestamp
+              ).toString(),
             };
           }
 
           // eg "x-out" "xout" "x out"
-          if (isXOut && windowsPerMember[memberName]) {
+          if ((isXOut || xOutFor) && windowsPerMember[memberName]) {
             // TODO: Heavy testing here on x-outs. Sigh.
             // if (memberName === "Koobu") {
             //   console.log({
@@ -354,9 +433,8 @@ export const channelMessagesToWindows = (
             const lateXInDiff =
               totalWindows - windowsPerMember[memberName].windows;
             windowsPerMember[memberName].windows = windowIndex - lateXInDiff; // index is 0 based, so +1 to adjust to window number. X-out happens after the last window process so +1 to adjust for that.
-            windowsPerMember[memberName].timestamp = formatTimestampToDate(
-              message.createdTimestamp
-            );
+            windowsPerMember[memberName].timestamp =
+              getDateDataFromUnixTimeStamp(message.createdTimestamp).toString();
             windowsPerMember[
               memberName
             ].message = `${windowsPerMember[memberName].message} | ${messageContent}`;
@@ -369,49 +447,79 @@ export const channelMessagesToWindows = (
               xKill: true,
               xClaim: false, // x-kill only forces x-claim false
               checkForError: false,
-              timestamp: formatTimestampToDate(message.createdTimestamp),
+              timestamp: getDateDataFromUnixTimeStamp(
+                message.createdTimestamp
+              ).toString(),
             };
           }
         });
       });
       // console.log({ windowsPerMember });
       return { windowsPerMember, enkiResponse };
-    case "kv":
-      channel.messages.forEach((message) => {
+    }
+    case "kv": {
+      memberOnlyMessages.forEach((message) => {
         const memberName =
           message.memberDisplayName ??
           message.author.globalName ??
           message.author.username;
         const messageContent = message.content.trim().toLocaleLowerCase();
-        // eg "x"  "x forgot" "x-forgot" "x Barrymckonichon"
-        if (
-          messageContent === "x" ||
-          (validFirstXinPattern.test(messageContent) &&
-            !messageContent.includes("kill")) ||
-          (messageContent.includes("x") && messageContent.includes("forgot")) // todo: do we want an amdin check for forgot like for scouts?
-        ) {
+
+        const messageType = getMessageType(messageContent);
+
+        if (messageType === "X") {
           windowsPerMember[memberName] = {
             windows: 1,
             message: messageContent,
-            xClaim: true,
+            xClaim: false,
             xKill: false,
             checkForError: false,
-            timestamp: formatTimestampToDate(message.createdTimestamp),
+            timestamp: getDateDataFromUnixTimeStamp(
+              message.createdTimestamp
+            ).toString(),
+          };
+        }
+        // x in DKP down to .5
+        // NEW x-pop grants 1 additional DKP for being present in the alliance when KV popped but was claimed by another group
+        // x + x-pop for a total of 1.5 DKP
+        // NEW x-claim grants 2.5 additional DKP for being present in the alliance and claiming KV for WD
+        // x + x-claim for a total of 3 DKP
+        // x-kill no change, still grants an additional 2 point to anyone who kills it
+        // x + x-claim + x-kill will give a total of 5 DKP
+        if (messageType === "X-POP") {
+          windowsPerMember[memberName] = {
+            windows: 3,
+            message: messageContent,
+            xClaim: false,
+            xKill: false,
+            checkForError: false,
+            timestamp: getDateDataFromUnixTimeStamp(
+              message.createdTimestamp
+            ).toString(),
           };
         }
 
-        // eg "x-kill" "xkill" "x kill"
-        const validXKill = validXKillPattern.test(messageContent);
-
-        if (validXKill) {
-          console.log({ validXKill, memberName, messageContent });
-        } else if (!validXKill) {
-          console.log({ validXKill, memberName, messageContent });
+        if (messageType === "X-CLAIM") {
+          if (windowsPerMember[memberName]) {
+            windowsPerMember[memberName].windows = 1;
+            windowsPerMember[memberName].xClaim = true;
+          } else {
+            windowsPerMember[memberName] = {
+              windows: 1, // Back to normal, only use 3 windows to hack the "1.5" points on non-claimed pop
+              message: messageContent,
+              xClaim: true,
+              xKill: false,
+              checkForError: false,
+              timestamp: getDateDataFromUnixTimeStamp(
+                message.createdTimestamp
+              ).toString(),
+            };
+          }
         }
 
-        if (validXKill) {
+        if (messageType === "X-KILL") {
+          // must have had an "x" prior to the "x-kill"
           if (windowsPerMember[memberName]) {
-            // must have had an "x" prior to the "x-kill"
             windowsPerMember[memberName].xKill = true;
           } else {
             // x-kill without camping / claim credit
@@ -421,54 +529,13 @@ export const channelMessagesToWindows = (
               xKill: true,
               xClaim: false,
               checkForError: false,
-              timestamp: formatTimestampToDate(message.createdTimestamp),
+              timestamp: getDateDataFromUnixTimeStamp(
+                message.createdTimestamp
+              ).toString(),
             };
           }
         }
-      });
 
-      return { windowsPerMember, enkiResponse };
-    case "jorm":
-    case "vrt":
-    case "vrtra":
-      channel.messages.forEach((message) => {
-        const memberName =
-          message.memberDisplayName ??
-          message.author.globalName ??
-          message.author.username;
-        const messageContent = message.content.trim().toLocaleLowerCase();
-        if (!windowsPerMember[memberName]) {
-          // eg "x"
-          // todo: add admin :greencheck: check for scouts
-          if (
-            !messageContent.includes("kill") && // not x-kill
-            messageContent.includes("x")
-          ) {
-            windowsPerMember[memberName] = {
-              windows: 1,
-              message: messageContent,
-              xClaim: true,
-              xKill: true,
-              checkForError: false,
-              timestamp: formatTimestampToDate(message.createdTimestamp),
-            };
-            // eg "x forgot" "x-forgot"
-          }
-        }
-         // x-kill
-        if (
-          messageContent.includes("x-kill")
-        ) {
-          windowsPerMember[memberName] = {
-            windows: 0,
-            message: messageContent,
-            xClaim: false,
-            xKill: true,
-            checkForError: false,
-            timestamp: formatTimestampToDate(message.createdTimestamp),
-          };
-          // eg "x forgot" "x-forgot"
-        }
         // eg. "x-out"
         if (windowsPerMember[memberName]) {
           if (
@@ -484,13 +551,96 @@ export const channelMessagesToWindows = (
                 windowsPerMember[memberName].message
               } -> ${messageContent.trim()}`,
               checkForError: false,
-              timestamp: formatTimestampToDate(message.createdTimestamp),
+              timestamp: getDateDataFromUnixTimeStamp(
+                message.createdTimestamp
+              ).toString(),
             };
           }
         }
-      }
+      });
 
       return { windowsPerMember, enkiResponse };
+    }
+    case "jorm":
+    case "vrt":
+    case "vrtra": {
+      memberOnlyMessages.forEach((message) => {
+        let memberName =
+          message.memberDisplayName ??
+          message.author.globalName ??
+          message.author.username;
+        const messageContent = message.content.trim().toLocaleLowerCase();
+
+        const xInFor = extractXinForMember(messageContent);
+        const xOutFor = extractXOutFor(messageContent);
+
+        if (xInFor !== null) {
+          memberName = xInFor;
+        }
+
+        if (xOutFor !== null) {
+          memberName = xOutFor;
+        }
+
+        if (!windowsPerMember[memberName]) {
+          // eg "x"
+          // todo: add admin :greencheck: check for scouts
+          if (
+            !messageContent.includes("kill") && // not x-kill
+            (messageContent.includes("x") || xInFor) // x or x-for
+          ) {
+            windowsPerMember[memberName] = {
+              windows: 1,
+              message: messageContent,
+              xClaim: true,
+              xKill: true,
+              checkForError: false,
+              timestamp: getDateDataFromUnixTimeStamp(
+                message.createdTimestamp
+              ).toString(),
+            };
+            // eg "x forgot" "x-forgot"
+          }
+        }
+        // x-kill
+        if (messageContent.includes("x-kill")) {
+          windowsPerMember[memberName] = {
+            windows: 0,
+            message: messageContent,
+            xClaim: false,
+            xKill: true,
+            checkForError: false,
+            timestamp: getDateDataFromUnixTimeStamp(
+              message.createdTimestamp
+            ).toString(),
+          };
+          // eg "x forgot" "x-forgot"
+        }
+        // eg. "x-out"
+        if (windowsPerMember[memberName]) {
+          if (
+            (messageContent.includes("x") &&
+              messageContent.includes("out") &&
+              !messageContent.includes("scout")) ||
+            xOutFor
+          ) {
+            windowsPerMember[memberName] = {
+              windows: 1,
+              xClaim: false,
+              xKill: false,
+              message: `${
+                windowsPerMember[memberName].message
+              } -> ${messageContent.trim()}`,
+              checkForError: false,
+              timestamp: getDateDataFromUnixTimeStamp(
+                message.createdTimestamp
+              ).toString(),
+            };
+          }
+        }
+      });
+      return { windowsPerMember, enkiResponse };
+    }
     default:
       return { windowsPerMember, enkiResponse };
   }
@@ -623,7 +773,7 @@ const buildHeaderRowsToDelimitedCSV = (
   return [row1, row2, row3, row4].join("\n");
 };
 const splitWindowsIntoValidInvalid = (
-  channel: TextChannel & { messages: any[] },
+  channel: TextChannel & { messages: MessageWithDisplayName[] },
   validTiamatWindows?: number[]
 ) => {
   const messagesByWindow = splitMessagesIntoWindows(channel.messages);
@@ -734,6 +884,7 @@ export function extractMHNMPartOfChannelName(text: string): string {
     "jorm",
     "ka",
     "kv",
+    "bs",
     "faf",
     "ada",
     "tia",
@@ -764,4 +915,28 @@ export const extractDayNumberAfterKing = (s: string): number | null => {
   } else {
     return null;
   }
+};
+
+export const extractXinForMember = (input: string): string | null => {
+  const regex = /x-for-([a-z]+)/i;
+
+  const match = regex.exec(input);
+
+  if (match && match[1]) {
+    return match[1];
+  }
+
+  return null;
+};
+
+export const extractXOutFor = (input: string): string | null => {
+  const regex = /x-out-for-([a-z]+)/i;
+
+  const match = regex.exec(input);
+
+  if (match && match[1]) {
+    return match[1];
+  }
+
+  return null;
 };

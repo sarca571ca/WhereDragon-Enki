@@ -1,14 +1,14 @@
-import { google } from "googleapis";
-import path from "path";
 import {
   extractDayNumberAfterKing,
   extractMHNMPartOfChannelName,
-} from "./helpers/channelToDKP";
+} from "./utils/channelToDKP";
+
 import {
   HNMTypeChannelKeyToSheetStringMap,
   KingHNMTypeChannelKeyToSheetStringMap,
   ParsedWindowsPerMember,
 } from "./models";
+
 import {
   generateDKPEntryHeaderEntries,
   generateDKPEntryMemberRowEntries,
