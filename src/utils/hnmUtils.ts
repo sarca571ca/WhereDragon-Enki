@@ -21,143 +21,35 @@ function sortHnmArguments(hnmData: HnmCommandData, args: string[]): HnmTimerData
         isValid: false,
         reason: "Invalid argument entry."
     };
-    const mods: string[] = ["n", "d", "t", "a"];
 
-    // TODO: Create findTimerErrors(hnmTimerData: HnmTimerData) to sort errors out
     // TODO: Create tests to check for all variations.
     if (args.length > 0) {
-        // Time
         if (args.length == 1 && args[0].length == 6) {
-            hnmTimerData.timeStamp = args[0];
-            hnmTimerData.isValid = true;
-
-            if (!(getDateDataFromTime(hnmTimerData.timeStamp) instanceof Date)) {
-                hnmTimerData.isValid = false;
-                hnmTimerData.reason = "Invalid DateTime";
-            }
-        } else if (args.length == 1) {
-            hnmTimerData.isValid = false;
-            hnmTimerData.reason = "Invalid DateTime";
+            return sortByTime(hnmTimerData, args);
         }
 
-
-        // Day, Time
         if (args.length == 2 && args[0].length >= 1 && args[0].length <= 2) {
-            hnmTimerData.day = parseInt(args[0]);
-            hnmTimerData.timeStamp = args[1];
-            hnmTimerData.isValid = true;
-
-            if (isNaN(hnmTimerData.day)) {
-                hnmTimerData.isValid = false;
-                hnmTimerData.reason = "Day has to be a number";
-            }
-
-            if (!(getDateDataFromTime(hnmTimerData.timeStamp) instanceof Date) || args[1].length !== 6) {
-                hnmTimerData.isValid = false;
-                hnmTimerData.reason = "Invalid DateTime";
-            }
+            return sortByDayTime(hnmTimerData, args);
         }
 
-        // Date, Time
         if (args.length == 2 && args[0].length == 8) {
-            hnmTimerData.timeStamp = `${args[0]} ${args[1]}`;
-            hnmTimerData.isValid = true;
-            hnmTimerData.reason = "Invalid DateTime";
-
-            if (!(getDateDataFromDateTime(hnmTimerData.timeStamp) instanceof Date) || args[0].length !== 8 || args[1].length !== 6) {
-                hnmTimerData.isValid = false;
-                hnmTimerData.reason = "Invalid DateTime";
-            }
+            return sortByDateTime(hnmTimerData, args);
         }
 
-        // Mod, Time
         if (args.length == 2 && args[0].length == 1 && isNaN(parseInt(args[0]))) {
-            hnmTimerData.day = 0;
-            hnmTimerData.mod = args[0];
-            hnmTimerData.timeStamp = args[1];
-            hnmTimerData.isValid = true;
-
-            if (!mods.includes(hnmTimerData.mod)) {
-                hnmTimerData.isValid = false;
-                hnmTimerData.reason = "Mod entered does not exist";
-            }
-
-            if (!(getDateDataFromTime(hnmTimerData.timeStamp) instanceof Date) || args[1].length !== 6) {
-                hnmTimerData.isValid = false;
-                hnmTimerData.reason = "Invalid DateTime";
-            }
+            return sortByModTime(hnmTimerData, args);
         }
 
-        // Day, Date, Time
-        if (args.length == 3 && args[0].length >= 1 && args[0].length <= 2 && args[1].length > 1) {
-            hnmTimerData.day = parseInt(args[0]);
-            hnmTimerData.timeStamp = `${args[1]} ${args[2]}`;
-            hnmTimerData.isValid = true;
-
-            if (isNaN(hnmTimerData.day)) {
-                hnmTimerData.isValid = false;
-                hnmTimerData.reason = "Day has to be a number";
-            }
-
-            if (isNaN(parseInt(args[1]))) {
-                hnmTimerData.isValid = false;
-                hnmTimerData.reason = `Invalid Date or Mod entry \t>>> ${args[1]} <<<`;
-            }
-
-            if (!(getDateDataFromDateTime(hnmTimerData.timeStamp) instanceof Date) || args[1].length !== 8 || args[2].length !== 6) {
-                hnmTimerData.isValid = false;
-                hnmTimerData.reason = "Invalid DateTime";
-            }
-
-        }
-
-        // Day, Mod, Time
         if (args.length == 3 && args[0].length >= 1 && args[0].length <= 2 && args[1].length == 1) {
-            hnmTimerData.day = parseInt(args[0]);
-            hnmTimerData.mod = args[1];
-            hnmTimerData.timeStamp = args[2];
-            hnmTimerData.isValid = true;
-
-            if (isNaN(hnmTimerData.day)) {
-                hnmTimerData.isValid = false;
-                hnmTimerData.reason = "Day has to be a number";
-            }
-
-            if (!mods.includes(hnmTimerData.mod)) {
-                hnmTimerData.isValid = false;
-                hnmTimerData.reason = "Mod entered does not exist";
-            }
-
-            if (!(getDateDataFromTime(hnmTimerData.timeStamp) instanceof Date) || args[2].length !== 6) {
-                hnmTimerData.isValid = false;
-                hnmTimerData.reason = "Invalid DateTime";
-            }
+            return sortByDayModTime(hnmTimerData, args);
         }
 
-        // Day, Mod, Date, Time
+        if (args.length == 3 && args[0].length >= 1 && args[0].length <= 2 && args[1].length > 1) {
+            return sortByDayDateTime(hnmTimerData, args);
+        }
+
         if (args.length == 4 && args[0].length >= 1 && args[0].length <= 2) {
-            hnmTimerData.day = parseInt(args[0]);
-            hnmTimerData.mod = args[1];
-            hnmTimerData.timeStamp = `${args[2]} ${args[3]}`;
-            hnmTimerData.isValid = true;
-
-            if (isNaN(hnmTimerData.day)) {
-                hnmTimerData.isValid = false;
-                hnmTimerData.reason = "Day has to be a number";
-            }
-
-            if (!mods.includes(hnmTimerData.mod)) {
-                hnmTimerData.isValid = false;
-                hnmTimerData.reason = "Mod entered does not exist";
-            }
-
-            if (!(getDateDataFromDateTime(hnmTimerData.timeStamp) instanceof Date) || args[2].length !== 8 || args[3].length !== 6) {
-                hnmTimerData.isValid = false;
-                hnmTimerData.reason = "Invalid DateTime";
-            }
-        } else if (args.length > 4) {
-            hnmTimerData.isValid = false;
-            hnmTimerData.reason = "Too many arguments entered"
+            return sortByDayModDateTime(hnmTimerData, args);
         }
 
     } else {
@@ -165,12 +57,171 @@ function sortHnmArguments(hnmData: HnmCommandData, args: string[]): HnmTimerData
         hnmTimerData.reason = "No arguments were entered";
     }
 
-
-
     let i: number = 0;
     while (i < args.length) {
         i++;
     }
+
+    return hnmTimerData;
+}
+
+function sortByTime(hnmTimerData: HnmTimerData, args: string[]): HnmTimerData {
+    if (args.length == 1 && args[0].length == 6) {
+        hnmTimerData.timeStamp = args[0];
+        hnmTimerData.isValid = true;
+
+        if (!(getDateDataFromTime(hnmTimerData.timeStamp) instanceof Date)) {
+            hnmTimerData.isValid = false;
+            hnmTimerData.reason = "Invalid DateTime";
+        }
+    } else if (args.length == 1) {
+        hnmTimerData.isValid = false;
+        hnmTimerData.reason = "Invalid DateTime";
+    }
+
+    return hnmTimerData
+}
+
+function sortByDayTime(hnmTimerData: HnmTimerData, args: string[]): HnmTimerData {
+    if (args.length == 2 && args[0].length >= 1 && args[0].length <= 2) {
+        hnmTimerData.day = parseInt(args[0]);
+        hnmTimerData.timeStamp = args[1];
+        hnmTimerData.isValid = true;
+
+        if (isNaN(hnmTimerData.day)) {
+            hnmTimerData.isValid = false;
+            hnmTimerData.reason = "Day has to be a number";
+        }
+
+        if (!(getDateDataFromTime(hnmTimerData.timeStamp) instanceof Date) || args[1].length !== 6) {
+            hnmTimerData.isValid = false;
+            hnmTimerData.reason = "Invalid DateTime";
+        }
+    }
+
+    return hnmTimerData;
+}
+
+function sortByDateTime(hnmTimerData: HnmTimerData, args: string[]): HnmTimerData {
+    if (args.length == 2 && args[0].length == 8) {
+        hnmTimerData.timeStamp = `${args[0]} ${args[1]}`;
+        hnmTimerData.isValid = true;
+        hnmTimerData.reason = "Invalid DateTime";
+
+        if (!(getDateDataFromDateTime(hnmTimerData.timeStamp) instanceof Date) || args[0].length !== 8 || args[1].length !== 6) {
+            hnmTimerData.isValid = false;
+            hnmTimerData.reason = "Invalid DateTime";
+        }
+    }
+
+    return hnmTimerData;
+}
+
+function sortByModTime(hnmTimerData: HnmTimerData, args: string[]): HnmTimerData {
+    const mods: string[] = ["n", "d", "t", "a"];
+
+    if (args.length == 2 && args[0].length == 1 && isNaN(parseInt(args[0]))) {
+        hnmTimerData.day = 0;
+        hnmTimerData.mod = args[0];
+        hnmTimerData.timeStamp = args[1];
+        hnmTimerData.isValid = true;
+
+        if (!mods.includes(hnmTimerData.mod)) {
+            hnmTimerData.isValid = false;
+            hnmTimerData.reason = "Mod entered does not exist";
+        }
+
+        if (!(getDateDataFromTime(hnmTimerData.timeStamp) instanceof Date) || args[1].length !== 6) {
+            hnmTimerData.isValid = false;
+            hnmTimerData.reason = "Invalid DateTime";
+        }
+    }
+
+    return hnmTimerData;
+}
+
+function sortByDayDateTime(hnmTimerData: HnmTimerData, args: string[]): HnmTimerData {
+    if (args.length == 3 && args[0].length >= 1 && args[0].length <= 2 && args[1].length > 1) {
+        hnmTimerData.day = parseInt(args[0]);
+        hnmTimerData.timeStamp = `${args[1]} ${args[2]}`;
+        hnmTimerData.isValid = true;
+
+        if (isNaN(hnmTimerData.day)) {
+            hnmTimerData.isValid = false;
+            hnmTimerData.reason = "Day has to be a number";
+        }
+
+        if (isNaN(parseInt(args[1]))) {
+            hnmTimerData.isValid = false;
+            hnmTimerData.reason = `Invalid Date or Mod entry \t>>> ${args[1]} <<<`;
+        }
+
+        if (!(getDateDataFromDateTime(hnmTimerData.timeStamp) instanceof Date) || args[1].length !== 8 || args[2].length !== 6) {
+            hnmTimerData.isValid = false;
+            hnmTimerData.reason = "Invalid DateTime";
+        }
+
+    }
+
+    return hnmTimerData;
+}
+
+function sortByDayModTime(hnmTimerData: HnmTimerData, args: string[]): HnmTimerData {
+    const mods: string[] = ["n", "d", "t", "a"];
+
+    if (args.length == 3 && args[0].length >= 1 && args[0].length <= 2 && args[1].length == 1) {
+        hnmTimerData.day = parseInt(args[0]);
+        hnmTimerData.mod = args[1];
+        hnmTimerData.timeStamp = args[2];
+        hnmTimerData.isValid = true;
+
+        if (isNaN(hnmTimerData.day)) {
+            hnmTimerData.isValid = false;
+            hnmTimerData.reason = "Day has to be a number";
+        }
+
+        if (!mods.includes(hnmTimerData.mod)) {
+            hnmTimerData.isValid = false;
+            hnmTimerData.reason = "Mod entered does not exist";
+        }
+
+        if (!(getDateDataFromTime(hnmTimerData.timeStamp) instanceof Date) || args[2].length !== 6) {
+            hnmTimerData.isValid = false;
+            hnmTimerData.reason = "Invalid DateTime";
+        }
+    }
+
+    return hnmTimerData;
+}
+
+function sortByDayModDateTime(hnmTimerData: HnmTimerData, args: string[]): HnmTimerData {
+    const mods: string[] = ["n", "d", "t", "a"];
+
+    if (args.length == 4 && args[0].length >= 1 && args[0].length <= 2) {
+        hnmTimerData.day = parseInt(args[0]);
+        hnmTimerData.mod = args[1];
+        hnmTimerData.timeStamp = `${args[2]} ${args[3]}`;
+        hnmTimerData.isValid = true;
+
+        if (isNaN(hnmTimerData.day)) {
+            hnmTimerData.isValid = false;
+            hnmTimerData.reason = "Day has to be a number";
+        }
+
+        if (!mods.includes(hnmTimerData.mod)) {
+            hnmTimerData.isValid = false;
+            hnmTimerData.reason = "Mod entered does not exist";
+        }
+
+        if (!(getDateDataFromDateTime(hnmTimerData.timeStamp) instanceof Date) || args[2].length !== 8 || args[3].length !== 6) {
+            hnmTimerData.isValid = false;
+            hnmTimerData.reason = "Invalid DateTime";
+        }
+    } else if (args.length > 4) {
+        hnmTimerData.isValid = false;
+        hnmTimerData.reason = "Too many arguments entered"
+    }
+
     return hnmTimerData;
 }
 

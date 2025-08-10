@@ -215,7 +215,10 @@ function formatTimer(hnmTimerData: HnmTimerData) {
     }
 
     // TODO: Implement mods and emoji formating.
-    // Convert this to a custom type: FormatedTimer
+    // NOTE: Something to think about, this section will look
+    // very sloppy with a lot of conditionals. Maybe we should
+    // think about making fucntions to keep it clean.
+
     if (hnmTimerData.hnmData.isKing && hnmTimerData.day <= 4) {
         // 1-4 Kings
         formatedHnmTimer.formatedTimer = `- ${formatedHnmTimer.name} ` +
