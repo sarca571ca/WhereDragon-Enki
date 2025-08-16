@@ -20,10 +20,25 @@ export const execute = (message: Message) => {
             hq: hq[i],
         }
 
-        const now: number = Date.now();
-        console.log(now, (now + 1000).toString().slice(0, -3))
+        // WARN: This technically crashes the bot since it is trying to simultaneously
+        // deleting timers and sorting them.
+        const now = new Date(Date.now());
+        let randomSeconds: string = (now.getSeconds() + Math.floor(Math.random() * (2 - 0 + 1)) + 0).toString()
+        let randomMinutes: string = (now.getMinutes() + Math.floor(Math.random() * (2 - 0 + 1)) + 0).toString()
+        let randomHours: string = (now.getHours()).toString()
 
-        // const time: string = parseInt().toString();
-        // createHnmTimer(message, commandData, [""])
+        if (parseInt(randomSeconds) >= 60) {
+            randomSeconds = (0).toString();
+            randomMinutes = (parseInt(randomMinutes) + 1).toString();
+        }
+        if (parseInt(randomMinutes) >= 60) {
+            randomMinutes = (0).toString();
+            randomHours = (parseInt(randomHours) + 1).toString();
+        }
+        if (parseInt(randomHours) >= 24) {
+            randomHours = (0).toString();
+        }
+
+        createHnmTimer(message, commandData, [randomHours + randomMinutes + randomSeconds])
     }
 }

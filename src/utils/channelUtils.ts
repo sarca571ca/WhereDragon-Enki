@@ -182,6 +182,7 @@ export async function getChannelName(client: ClientWithCommands, channelId: stri
     } catch (error) {
         console.error(`[ERROR] Failed to fetch channel ${channelId}:`, error);
     }
+
     return null;
 }
 
@@ -214,11 +215,6 @@ function formatTimer(hnmTimerData: HnmTimerData) {
         formatedTimer: ""
     }
 
-    // TODO: Implement mods and emoji formating.
-    // NOTE: Something to think about, this section will look
-    // very sloppy with a lot of conditionals. Maybe we should
-    // think about making fucntions to keep it clean.
-
     if (hnmTimerData.hnmData.isKing && hnmTimerData.day <= 4) {
         // 1-4 Kings
         formatedHnmTimer.formatedTimer = `- ${formatedHnmTimer.name} ` +
@@ -229,8 +225,8 @@ function formatTimer(hnmTimerData: HnmTimerData) {
         if (typeof hnmTimerData.hnmData.hq == "string") {
             formatedHnmTimer.hqName = hnmTimerData.hnmData.hq;
         }
-        formatedHnmTimer.formatedTimer = `- ${formatedHnmTimer.name}/${formatedHnmTimer.hqName} ` +
-            `${formatedHnmTimer.mod}${formatedHnmTimer.emoji}${formatedHnmTimer.mod}` +
+        formatedHnmTimer.formatedTimer = `- **${formatedHnmTimer.name}/${formatedHnmTimer.hqName}** ` +
+            `${formatedHnmTimer.mod}:rotating_light:${formatedHnmTimer.emoji}${formatedHnmTimer.mod}` +
             ` (**${hnmTimerData.day}**) ` + `: <t:${utcTimeStamp}:T> <t:${utcTimeStamp}:R>`
     } else {
         // All other hnm's
@@ -247,7 +243,8 @@ async function removeTimer(channel: TextChannel, hnmName: string) {
 
     if (messages) {
         messages.forEach((message) => {
-            if (message.content.startsWith(`- ${hnmName}`)) {
+            if (message.content.startsWith(`- ${hnmName}`) ||
+                message.content.startsWith(`- **${hnmName}`)) {
                 message.delete();
             }
         });
@@ -302,4 +299,8 @@ export function extractHnmeNameFromTimerMessage(timerMessage: string): string {
         hnmName = hnmNameMatch[1].toString();
     }
     return hnmName;
+}
+
+export function createCampChannel() {
+
 }
