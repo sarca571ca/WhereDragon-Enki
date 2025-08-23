@@ -286,13 +286,13 @@ async function sortTimersChannel(channel: TextChannel) {
 
     for (const [_, content] of sortedMessages) {
         if (content) {
-            await removeTimer(channel, extractHnmeNameFromTimerMessage(content))
+            await removeTimer(channel, extractHnmNameFromTimerMessage(content))
             await addTimer(channel, content);
         }
     }
 }
 
-export function extractHnmeNameFromTimerMessage(timerMessage: string): string {
+export function extractHnmNameFromTimerMessage(timerMessage: string): string {
     const hnmNameMatch = timerMessage.match(/^- (\S+.+) :/);
     let hnmName: string = "";
     if (hnmNameMatch) {
@@ -301,6 +301,13 @@ export function extractHnmeNameFromTimerMessage(timerMessage: string): string {
     return hnmName;
 }
 
-export function createCampChannel() {
+export function extractHnmTimestampFromTimerMessage(timerMessage: string): number {
+    const hnmTimestampMatch = timerMessage.match(/^<t:(\S+.+):T>/)?.toString()
+    if (hnmTimestampMatch) {
+        return parseInt(hnmTimestampMatch);
+    }
+    return 0;
+}
 
+export function createCampChannel() {
 }
