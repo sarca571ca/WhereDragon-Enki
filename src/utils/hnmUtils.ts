@@ -235,3 +235,8 @@ function printHnmTimerData(hnmTimerData: HnmTimerData): void {
         console.log(`Reason: ${hnmTimerData.reason}`)
     }
 }
+
+export function createChannelName(hnmName: string, timestamp: number): string {
+    const channelNamePartOne = "";
+    return "";
+}

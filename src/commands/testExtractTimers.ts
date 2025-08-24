@@ -4,19 +4,26 @@ import { getMessageData } from "../utils/channelUtils";
 import { extractHnmNameFromTimerMessage, extractHnmTimestampFromTimerMessage } from "../utils/channelUtils"
 import { ClientWithCommands } from "../types/ClientWithCommands"
 import { chAutoTimers } from "../config.json"
+import { getDateDataFromUnixTimeStamp } from "../utils/timeUtils";
 
 export const name = "tet"
 export const description = "Testing extraction of timers."
 export const execute = async (message: Message) => {
     const client: ClientWithCommands = message.client;
     const timerChannel = await client.channels.fetch(chAutoTimers);
-    const now = new Date().toUTCString().slice(0, -3);
+    const now = Math.floor(Date.now() * 1e-3);
 
     if (timerChannel instanceof TextChannel) {
         const allMessagesData: MessageWithDisplayName[] = await getMessageData(timerChannel)
+        for (const timer of allMessagesData) {
+            const hnmName = extractHnmNameFromTimerMessage(timer.content);
+            const timestamp = extractHnmTimestampFromTimerMessage(timer.content);
+            const timeTillCamp = timestamp - now;
 
-        for (const timer in allMessagesData) {
-            console.log(`HnmName: ${extractHnmNameFromTimerMessage(timer)}\nTimestamp: ${extractHnmTimestampFromTimerMessage(timer)}\nNow: \t${now}`)
+            if (timeTillCamp <= 20 * 60 && timeTillCamp > 0) {
+                console.log(`Within 20 minutes creating channel ${hnmName}`)
+            }
+
         }
     }
 }

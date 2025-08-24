@@ -20,6 +20,11 @@ export function parseTime(hnmTimerData: HnmTimerData): string | null {
 }
 
 export function getDateDataFromTime(timeStamp: string): Date {
+    // TODO: If the return offsetDateTimeUTC is in the future we need to
+    // subtract 1 day. Then if the new day is 0 we need to subtract the
+    // month by 1 and set the day to the last day of the previous month.
+    // If the new month is 0 we need to subtract
+    // 1 year and set the month to 12.
     const hour = parseInt(timeStamp.slice(0, 2));
     const minute = parseInt(timeStamp.slice(2, 4));
     const second = parseInt(timeStamp.slice(4, 6));
@@ -88,6 +93,11 @@ export function getUnixTimeStampFromDateData(timeStamp: Date, hnmTimerData: HnmT
     const seconds = timeStamp.getUTCSeconds();
     const hoursOffest = hours - tzOffset + hnmOffset;
 
+    // TODO: This specific section of code is repeated several times.
+    // It also is required yet again for another function so it needs
+    // to be converted to its own function. 
+    // WARN: Its not exactly the same. Will need to compare all the 
+    // code and change how it interacts with each component before changing.
     if (hoursOffest >= 24) {
         dayOfMonth += Math.floor(hoursOffest / 24);
         hours = hoursOffest % 24;
@@ -184,6 +194,59 @@ export function getDateDataFromUnixTimeStamp(timeStamp: number): string {
         `${String(seconds).padStart(2, "0")}`;
 
     return formattedDate;
+}
+
+export function formatDateForChannelName(timeStamp: number): string {
+    // 1. Pull in the bots TZ Date using getUTCOffset.
+    const unixDateTime: Date = new Date(timeStamp);
+    const tzOffset = getUTCOffset(timeStamp);
+    // 2. Convert it into typeof DateData. Can leave
+    //      tzOffset as 0 maybe but depends on the changes
+    //      required in step 3 below.
+    // 3. Do all the necesary checks needed to adjust the
+    //      date accordingly ie -1 to day, month, or year.
+    //      (See getDateDataFromUnixTimeStamp for an example
+    //      that also needs to be converted to a function then
+    //      delete the TODO. This is a priority.)
+    let year = unixDateTime.getUTCFullYear();
+    let month = unixDateTime.getUTCMonth() + 1;
+    let dayOfMonth = unixDateTime.getUTCDate();
+    let hours = unixDateTime.getUTCHours();
+
+    if (hours + tzOffset >= 24) {
+        dayOfMonth++;
+        hours = (hours + tzOffset) % 24;
+
+        const daysInMonth = new Date(year, month + 1, 0).getUTCDate();
+        if (dayOfMonth > daysInMonth) {
+            dayOfMonth = 1;
+            month++;
+
+            if (month > 12) {
+                month = 1;
+                year++;
+            }
+        }
+    } else if (hours + tzOffset < 0) {
+        dayOfMonth--;
+        hours = 24 + (hours + tzOffset);
+
+        if (dayOfMonth < 1) {
+            month--;
+            if (month < 1) {
+                month = 12;
+                year--;
+            }
+            dayOfMonth = new Date(year, month, 0).getUTCDate();
+        }
+    } else {
+        hours += tzOffset;
+    }
+    // 4. return a string formated first 3 of month and day.
+    //      Current above code will only return a number (08 for aug) so we
+    //      need to convert back to a word.
+    //      eg. aug23
+    return ``;
 }
 
 export function getUTCOffset(timestamp: number, timeZone: string = botTZ): number {
