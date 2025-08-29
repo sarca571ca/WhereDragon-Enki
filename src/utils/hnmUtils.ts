@@ -1,4 +1,4 @@
-import { getDateDataFromTime, getDateDataFromDateTime } from "./timeUtils";
+import { getDateDataFromTime, getDateDataFromDateTime, formatDateForChannelName } from "./timeUtils";
 import { processHNM } from "./channelUtils";
 import { HnmTimerData } from "../types/HnmTimerData";
 import { Message } from "discord.js";
@@ -237,6 +237,21 @@ function printHnmTimerData(hnmTimerData: HnmTimerData): void {
 }
 
 export function createChannelName(hnmName: string, timestamp: number): string {
-    const channelNamePartOne = "";
-    return "";
+    // 1. Channel name format should be jan01-beh
+    const channelNamePartOne: string = formatDateForChannelName(timestamp * 1000);
+    let channelNamePartTwo: string = "";
+    // 2. Find the month and day for pst based on the timestamp
+    // 3. Store that in the channelNamePartOne var
+    // 4. kv, ka, and bs are special naming for channels. eg. jan01-kv
+    //      all others should be the first 3 only.
+    if (hnmName == "King Vinegarroon") {
+        channelNamePartTwo = "kv";
+    } else if (hnmName == "King Arthro") {
+        channelNamePartTwo = "ka";
+    } else if (hnmName == "Bloodsucker") {
+        channelNamePartTwo = "bs";
+    } else {
+        channelNamePartTwo = hnmName.slice(0, 3)
+    }
+    return `${channelNamePartOne}-${channelNamePartTwo}`;
 }

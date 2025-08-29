@@ -197,17 +197,9 @@ export function getDateDataFromUnixTimeStamp(timeStamp: number): string {
 }
 
 export function formatDateForChannelName(timeStamp: number): string {
-    // 1. Pull in the bots TZ Date using getUTCOffset.
     const unixDateTime: Date = new Date(timeStamp);
     const tzOffset = getUTCOffset(timeStamp);
-    // 2. Convert it into typeof DateData. Can leave
-    //      tzOffset as 0 maybe but depends on the changes
-    //      required in step 3 below.
-    // 3. Do all the necesary checks needed to adjust the
-    //      date accordingly ie -1 to day, month, or year.
-    //      (See getDateDataFromUnixTimeStamp for an example
-    //      that also needs to be converted to a function then
-    //      delete the TODO. This is a priority.)
+    const months: string[] = ["", "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
     let year = unixDateTime.getUTCFullYear();
     let month = unixDateTime.getUTCMonth() + 1;
     let dayOfMonth = unixDateTime.getUTCDate();
@@ -239,14 +231,8 @@ export function formatDateForChannelName(timeStamp: number): string {
             }
             dayOfMonth = new Date(year, month, 0).getUTCDate();
         }
-    } else {
-        hours += tzOffset;
     }
-    // 4. return a string formated first 3 of month and day.
-    //      Current above code will only return a number (08 for aug) so we
-    //      need to convert back to a word.
-    //      eg. aug23
-    return ``;
+    return `${months[month]}${dayOfMonth}`;
 }
 
 export function getUTCOffset(timestamp: number, timeZone: string = botTZ): number {

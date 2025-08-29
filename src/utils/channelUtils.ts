@@ -293,7 +293,7 @@ async function sortTimersChannel(channel: TextChannel) {
 }
 
 export function extractHnmNameFromTimerMessage(timerMessage: string): string {
-    const hnmNameMatch = timerMessage.match(/^-\s+\**([^\s\/*]+).*?\**\s*:/);
+    const hnmNameMatch = timerMessage.match(/^-\s+\**([\w\s]+?)(?=[/*:]|\*\*|\s:)/);
     let hnmName: string = "";
     if (hnmNameMatch) {
         hnmName = hnmNameMatch[1].toString();
