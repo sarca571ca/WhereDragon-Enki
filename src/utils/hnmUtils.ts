@@ -237,13 +237,8 @@ function printHnmTimerData(hnmTimerData: HnmTimerData): void {
 }
 
 export function createChannelName(hnmName: string, timestamp: number): string {
-    // 1. Channel name format should be jan01-beh
     const channelNamePartOne: string = formatDateForChannelName(timestamp * 1000);
     let channelNamePartTwo: string = "";
-    // 2. Find the month and day for pst based on the timestamp
-    // 3. Store that in the channelNamePartOne var
-    // 4. kv, ka, and bs are special naming for channels. eg. jan01-kv
-    //      all others should be the first 3 only.
     if (hnmName == "King Vinegarroon") {
         channelNamePartTwo = "kv";
     } else if (hnmName == "King Arthro") {

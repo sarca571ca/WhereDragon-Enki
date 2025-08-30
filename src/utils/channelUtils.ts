@@ -1,4 +1,4 @@
-import { Channel, Collection, Message, TextChannel } from "discord.js";
+import { Channel, ChannelType, Collection, Message, TextChannel } from "discord.js";
 import { getNextTenMinuteInterval, getWindowNumber, parseDiscordTimestamp } from "../utils/utils"
 import * as cron from "node-cron";
 import { ClientWithCommands } from "../types/ClientWithCommands";
@@ -219,7 +219,7 @@ function formatTimer(hnmTimerData: HnmTimerData) {
         // 1-4 Kings
         formatedHnmTimer.formatedTimer = `- ${formatedHnmTimer.name} ` +
             `${formatedHnmTimer.mod}${formatedHnmTimer.emoji}${formatedHnmTimer.mod}` +
-            ` (**${hnmTimerData.day}**) ` + `: <t:${utcTimeStamp}:T> <t:${utcTimeStamp}:R>`
+            ` (**${hnmTimerData.day}**) ` + `: <t:${utcTimeStamp}:T><t:${utcTimeStamp}:R>`
     } else if (hnmTimerData.hnmData.isKing && hnmTimerData.day >= 4) {
         // 5+ Kings HQ
         if (typeof hnmTimerData.hnmData.hq == "string") {
@@ -227,12 +227,12 @@ function formatTimer(hnmTimerData: HnmTimerData) {
         }
         formatedHnmTimer.formatedTimer = `- **${formatedHnmTimer.name}/${formatedHnmTimer.hqName}** ` +
             `${formatedHnmTimer.mod}:rotating_light:${formatedHnmTimer.emoji}${formatedHnmTimer.mod}` +
-            ` (**${hnmTimerData.day}**) ` + `: <t:${utcTimeStamp}:T> <t:${utcTimeStamp}:R>`
+            ` (**${hnmTimerData.day}**) ` + `: <t:${utcTimeStamp}:T><t:${utcTimeStamp}:R>`
     } else {
         // All other hnm's
         formatedHnmTimer.formatedTimer = `- ${formatedHnmTimer.name} ` +
             `${formatedHnmTimer.mod}${formatedHnmTimer.emoji}${formatedHnmTimer.mod}` +
-            `: <t:${utcTimeStamp}:T> <t:${utcTimeStamp}:R>`
+            `: <t:${utcTimeStamp}:T><t:${utcTimeStamp}:R>`
     }
 
     return formatedHnmTimer.formatedTimer;
@@ -307,6 +307,46 @@ export function extractHnmTimestampFromTimerMessage(timerMessage: string): numbe
         return parseInt(hnmTimestampMatch[1]);
     }
     return -1;
+}
+
+export function fetchCategoryChannelNames(client: ClientWithCommands, categoryId: string): string[] | null;
+export function fetchCategoryChannelNames(client: ClientWithCommands): string[];
+
+export function fetchCategoryChannelNames(client: ClientWithCommands, categoryId?: string): string[] | null {
+    if (!categoryId) {
+        return client.channels.cache
+            .filter(ch => ch.type === ChannelType.GuildText)
+            .map(ch => (ch as TextChannel).name);
+    }
+    const category = client.channels.cache.get(categoryId)
+
+    if (!category || category.type !== ChannelType.GuildCategory) {
+        return null
+    }
+    return client.channels.cache
+        .filter(ch => ch.type === ChannelType.GuildText && ch.parentId === category.id)
+        .map(ch => (ch as TextChannel).name);
+}
+
+export function isChannelNameInGuildChannels(client: ClientWithCommands, channelName: string): boolean {
+    const allChannelNames = fetchCategoryChannelNames(client);
+
+    for (const allChannelName of allChannelNames) {
+        if (allChannelName === channelName) { return true }
+    }
+    return false;
+}
+
+export function isChannelNameInCategoryChannels(client: ClientWithCommands, channelName: string, categoryId: string): boolean | null {
+    const categoryChannelNames = fetchCategoryChannelNames(client, categoryId);
+
+    if (!categoryChannelNames) {
+        return null;
+    }
+    for (const categoryChannelName of categoryChannelNames) {
+        if (categoryChannelName === channelName) { return true }
+    }
+    return false;
 }
 
 export function createCampChannel() {
