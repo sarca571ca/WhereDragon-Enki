@@ -1,4 +1,4 @@
-// INFO: createChannelTask
+// info: createChannelTask
 // loop: 00:00:60,
 // task: Creates the channel for the camp
 

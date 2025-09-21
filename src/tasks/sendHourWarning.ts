@@ -22,7 +22,7 @@ export const execute = async (client: ClientWithCommands) => {
         // - can set a event to watch for channels created by the bot
         //      and use that to create all the channel tasks.
         sendHourWarning(client)
-    }, 5 * 1000);
+    }, 60 * 1000);
 };
 
 async function sendHourWarning(client: ClientWithCommands) {
