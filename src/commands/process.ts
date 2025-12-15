@@ -1,8 +1,8 @@
 import { Message, TextChannel } from "discord.js";
 import {
-  extractValidWindowsFromProcessCommand,
-  getMessageData,
-  getPopWindowFromProcessCommand,
+    extractValidWindowsFromProcessCommand,
+    getMessageData,
+    getPopWindowFromProcessCommand,
 } from "../utils/channelUtils";
 import { channelMessagesToWindows } from "../utils/channelToDKP";
 import { MessageWithDisplayName } from "../types/MessageData";
@@ -12,58 +12,58 @@ import { updateSignupChannel } from "./update";
 export const name = "process";
 export const description = "Processes the DKP from message data.";
 export const execute = async (message: Message) => {
-  const isClaimed = message.content.includes("claimed");
-  const popWindow = message.content.includes("pop")
-    ? getPopWindowFromProcessCommand(message.content)
-    : undefined;
+    const isClaimed = message.content.includes("claimed");
+    const popWindow = message.content.includes("pop")
+        ? getPopWindowFromProcessCommand(message.content)
+        : undefined;
 
-  const validTiamatWindows = message.content.includes("valid")
-    ? extractValidWindowsFromProcessCommand(message.content)
-    : undefined;
+    const validTiamatWindows = message.content.includes("valid")
+        ? extractValidWindowsFromProcessCommand(message.content)
+        : undefined;
 
-  // 1139789274556923967 -- kv-signup
-  // 1308632687896039485 -- jorm-signup
-  // 1308632520379863060 -- vrtra-signup
-  // 1140714925027758210 -- shiki-sihnup
-  // 1347703873422364712 - bloodsucker-signup
-  await updateSignupChannel(message.client, "1308632687896039485");
-  await updateSignupChannel(message.client, "1308632520379863060");
-  await updateSignupChannel(message.client, "1140714925027758210");
-  await updateSignupChannel(message.client, "1347703873422364712");
-  await updateSignupChannel(message.client, "1139789274556923967");
+    // 1139789274556923967 -- kv-signup
+    // 1308632687896039485 -- jorm-signup
+    // 1308632520379863060 -- vrtra-signup
+    // 1140714925027758210 -- shiki-sihnup
+    // 1347703873422364712 - bloodsucker-signup
+    await updateSignupChannel(message.client, "1308632687896039485");
+    await updateSignupChannel(message.client, "1308632520379863060");
+    await updateSignupChannel(message.client, "1140714925027758210");
+    await updateSignupChannel(message.client, "1347703873422364712");
+    await updateSignupChannel(message.client, "1139789274556923967");
 
-  try {
-    const channel = message.channel as TextChannel;
-    const allMessagesData: MessageWithDisplayName[] = await getMessageData(
-      channel
-    );
+    try {
+        const channel = message.channel as TextChannel;
+        const allMessagesData: MessageWithDisplayName[] = await getMessageData(
+            channel
+        );
 
-    const { windowsPerMember, enkiResponse } = channelMessagesToWindows(
-      {
-        ...message.channel,
-        messages: allMessagesData,
-      } as TextChannel & { messages: Message[] },
-      popWindow,
-      validTiamatWindows
-    );
+        const { windowsPerMember, enkiResponse } = channelMessagesToWindows(
+            {
+                ...message.channel,
+                messages: allMessagesData,
+            } as TextChannel & { messages: Message[] },
+            popWindow,
+            validTiamatWindows
+        );
 
-    if (message.channel instanceof TextChannel) {
-      await writeToDKPEntrySheetBasic(
-        message.channel.name,
-        windowsPerMember,
-        isClaimed
-      );
-      await message.channel.send(enkiResponse);
-    } else {
-      // WARN: This is likely not good practice since we will delete commands
-      // but maybe we can delete commands after run time. A better option
-      // would be to DM the user.
-      message.reply("This command cannot be executed in this type of channel.");
+        if (message.channel instanceof TextChannel) {
+            await writeToDKPEntrySheetBasic(
+                message.channel.name,
+                windowsPerMember,
+                isClaimed
+            );
+            await message.channel.send(enkiResponse);
+        } else {
+            // WARN: This is likely not good practice since we will delete commands
+            // but maybe we can delete commands after run time. A better option
+            // would be to DM the user.
+            message.reply("This command cannot be executed in this type of channel.");
+        }
+    } catch (error) {
+        if (message.channel instanceof TextChannel) {
+            console.error("Error fetching messages:", error);
+            await message.channel.send("Error fetching messages.");
+        }
     }
-  } catch (error) {
-    if (message.channel instanceof TextChannel) {
-      console.error("Error fetching messages:", error);
-      await message.channel.send("Error fetching messages.");
-    }
-  }
 };
