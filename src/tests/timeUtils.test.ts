@@ -1,7 +1,8 @@
 import test from "tape";
 import { HnmCommandData } from "../types/CommandData";
 import { HnmTimerData } from "../types/HnmTimerData";
-import { getDateDataFromDateTime, getDateDataFromTime, getUnixTimeStampFromDateData, getUTCOffset, parseTime } from "../utils/timeUtils";
+import { getDateDataFromTime, getUnixTimeStampFromDateData, getUTCOffset, parseTime } from "../utils/timeUtils";
+import { getDateDataFromDateTime } from "../utils/getDateDataFromDateTime";
 
 test("Function getDateDataFromTime", (t) => {
     const timeStamp: string = "142027";

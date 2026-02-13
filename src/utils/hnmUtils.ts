@@ -1,4 +1,5 @@
-import { getDateDataFromTime, getDateDataFromDateTime, formatDateForChannelName } from "./timeUtils";
+import { getDateDataFromTime, formatDateForChannelName } from "./timeUtils";
+import { getDateDataFromDateTime } from "./getDateDataFromDateTime";
 import { processHNM } from "./channelUtils";
 import { HnmTimerData } from "../types/HnmTimerData";
 import { Message } from "discord.js";
