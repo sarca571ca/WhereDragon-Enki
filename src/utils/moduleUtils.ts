@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import { ClientWithCommands } from "../types/ClientWithCommands";
 
 export async function loadEvents(client: ClientWithCommands) {
-    const eventsDir = path.join(__dirname, '../events');
+    const eventsDir = path.join(process.cwd(), 'dist/events');
     const eventFiles = fs.readdirSync(eventsDir);
 
     let numberOfEvents: number = 0;
@@ -43,7 +43,7 @@ export async function loadEvents(client: ClientWithCommands) {
 }
 
 export async function loadTasks(client: ClientWithCommands) {
-    const tasksDir = path.join(__dirname, '../tasks');
+    const tasksDir = path.join(process.cwd(), 'dist/tasks');
     const taskFiles = fs.readdirSync(tasksDir);
 
     let numberOfTasks: number = 0;
@@ -82,7 +82,7 @@ export async function loadTasks(client: ClientWithCommands) {
 }
 
 export async function loadCommands(client: ClientWithCommands) {
-    const commandsDir = path.join(__dirname, '../commands');
+    const commandsDir = path.join(process.cwd(), 'dist/commands');
     const commandFiles = fs.readdirSync(commandsDir);
 
     let numberOfCommands: number = 0;

@@ -6,19 +6,6 @@
     "chCommands": "1110076161201020949",
     "chPing": "1138678403730526379",
     "catHnmAttendance": "1110230423272952008",
-    "campMessageDefault": "```\n\
-Note:\n\
-    - Channel will be open for 5-Minutes after pop/last window.\n\
-    - Channel is moved to Awaiting Processing category.\n\
-    - Late x-in's (within reason) or corrections to your camp status can be made after its moved.\n\
-    - DO NOT X-IN before arriving to camp. This means in position and buffed.\n\
-```",
-    "campMeassgeGw": "```\n\
-Note:\n\
-    - Channel is manually managed, a valid hold party must be present for dkp.\n\
-    - Conditions for valid hold party are: Tank (w/ Resist Set), BRD, WHM, 2 Sleeps\n\
-    - The !pop command will work within this channel.\n\
-    - Windows will be opened 5-Minutes prior to window and closed 1-Minute after window.\n\
-    - Late x-in's won't be allowed due to the nature of this camp.\n\
-```"
+    "campMessageDefault": "```\nNote:\n    - Channel will be open for 5-Minutes after pop/last window.\n    - Channel is moved to Awaiting Processing category.\n    - Late x-in's (within reason) or corrections to your camp status can be made after its moved.\n    - DO NOT X-IN before arriving to camp. This means in position and buffed.\n```",
+    "campMeassgeGw": "```\nNote:\n    - Channel is manually managed, a valid hold party must be present for dkp.\n    - Conditions for valid hold party are: Tank (w/ Resist Set), BRD, WHM, 2 Sleeps\n    - The !pop command will work within this channel.\n    - Windows will be opened 5-Minutes prior to window and closed 1-Minute after window.\n    - Late x-in's won't be allowed due to the nature of this camp.\n```"
 }
