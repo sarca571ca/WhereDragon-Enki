@@ -494,6 +494,629 @@ test("Tiamat Channel To DKP", async (t) => {
     t.end();
 });
 
+test("Tiamat Channel To DKP - 'x - job' input validation", async (t) => {
+    const mockTiamatChannel = loadJsonFile(
+        "test_data/tiamat_6_spaced_job_input.json"
+    ) as TextChannel & { messages: Message[] };
+    const { windowsPerMember: parsedWindowsPerMember } =
+        channelMessagesToWindows(mockTiamatChannel);
+    // console.log({ parsedWindowsPerMember });
+    t.deepEqual(parsedWindowsPerMember, {
+        Dogs: {
+            windows: 9,
+            message:
+                "x - drk | x - drk | x - drk | x - drk | x - drk | x - drk | x - drk | x - drk | x - drk",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 23:05:18",
+        },
+        Nicolesixtynine: {
+            windows: 9,
+            message:
+                "x - smn | x - smn | x - smn | x - smn | x - smn | x - smn | x - smn | x - smn | x - smn | x - smn kill",
+            checkForError: false,
+            xClaim: false,
+            xKill: true,
+            timestamp: "2024-11-06 23:14:21",
+        },
+        Riccu: {
+            windows: 5,
+            message: "x - smn | x - smn | x - smn | x - smn | x - smn | x - smn kill",
+            checkForError: false,
+            xClaim: false,
+            xKill: true,
+            timestamp: "2024-11-06 23:23:46",
+        },
+        Darth: {
+            windows: 7,
+            message: "x - whm | x - whm | x - whm | x - whm | x - whm | x - whm | x - whm",
+            checkForError: false,
+            xClaim: false,
+            xKill: false,
+            timestamp: "2024-11-06 22:05:43",
+        },
+        Trebella: {
+            windows: 2,
+            message: "x - smn | x - smn",
+            checkForError: false,
+            xClaim: false,
+            xKill: false,
+            timestamp: "2024-11-06 15:05:01",
+        },
+        Meetra: {
+            windows: 2,
+            message: "x - blm | x - blm",
+            checkForError: false,
+            xClaim: false,
+            xKill: false,
+            timestamp: "2024-11-06 15:10:15",
+        },
+        Nar: {
+            windows: 10,
+            message:
+                "x - smn | x - smn | x - smn | x - smn | x - smn | x - smn | x - smn | x - smn | x - thf | x - thf",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 23:07:54",
+        },
+        Rahne: {
+            windows: 10,
+            message:
+                "x - whm | x - whm | x - whm | x - whm | x - whm | x - whm | x - whm | x - whm | x - whm | x - whm",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 23:05:04",
+        },
+        Leob: {
+            windows: 3,
+            message: "x - rdm | x - rdm | x - rdm",
+            checkForError: false,
+            xClaim: false,
+            xKill: false,
+            timestamp: "2024-11-06 18:06:54",
+        },
+        Magnum: {
+            windows: 3,
+            message: "x - smn | x - smn | x - smn",
+            checkForError: false,
+            xClaim: false,
+            xKill: false,
+            timestamp: "2024-11-06 16:08:30",
+        },
+        Yeti: {
+            windows: 10,
+            message:
+                "x - blm | x - blm | x - blm | x - blm | x - blm | x - blm | x - blm | x - blm | x - blm | x - blm",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 23:05:14",
+        },
+        Brandan: {
+            windows: 8,
+            message: "x - brd | x - brd | x - brd | x - brd | x - brd | x - brd | x - brd | x - brd",
+            checkForError: false,
+            xClaim: false,
+            xKill: false,
+            timestamp: "2024-11-06 22:05:44",
+        },
+        Tarnish: {
+            windows: 10,
+            message:
+                "x - pld | x - pld | x - pld | x - pld | x - pld | x - pld | x - pld | x - pld | x - pld | x - pld",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 23:05:10",
+        },
+        Mathrandir: {
+            windows: 10,
+            message:
+                "x - whm | x - whm | x - whm | x - whm | x - whm | x - whm | x - whm | x - whm | x - whm | x - whm",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 23:05:26",
+        },
+        Pengo: {
+            windows: 9,
+            message:
+                "x - rdm | x - rdm | x - rdm | x - rdm | x - rdm | x - rdm | x - rdm | x - rdm | x - rdm",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 23:05:11",
+        },
+        Naten: {
+            windows: 8,
+            message: "x - pld | x - pld | x - pld | x - pld | x - pld | x - pld | x - pld | x - pld",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 23:06:10",
+        },
+        Lilsheck: {
+            windows: 2,
+            message: "x - smn | x - smn",
+            checkForError: false,
+            xClaim: false,
+            xKill: false,
+            timestamp: "2024-11-06 18:05:03",
+        },
+        Sabyrd: {
+            windows: 2,
+            message: "x - brd | x - brd",
+            checkForError: false,
+            xClaim: false,
+            xKill: false,
+            timestamp: "2024-11-06 21:07:35",
+        },
+        Syragon: {
+            windows: 7,
+            message:
+                "x - rdm | x - rdm | x - rdm | x - rdm | x - rdm | x - rdm | x - rdm | x - rdm kill",
+            checkForError: false,
+            xClaim: false,
+            xKill: true,
+            timestamp: "2024-11-06 23:14:19",
+        },
+        Sebasthegalka: {
+            windows: 7,
+            message: "x - mnk | x - mnk | x - mnk | x - mnk | x - mnk | x - mnk | x - mnk",
+            checkForError: false,
+            xClaim: false,
+            xKill: false,
+            timestamp: "2024-11-06 22:05:24",
+        },
+        Phiasko: {
+            windows: 7,
+            message: "x - brd | x - brd | x - brd | x - brd | x - brd | x - brd | x - brd",
+            checkForError: false,
+            xClaim: false,
+            xKill: false,
+            timestamp: "2024-11-06 22:05:15",
+        },
+        Dcplee: {
+            windows: 4,
+            message: "x - smn | x - smn | x - smn | x - smn",
+            checkForError: false,
+            xClaim: false,
+            xKill: false,
+            timestamp: "2024-11-06 21:05:47",
+        },
+        Karianna: {
+            windows: 7,
+            message: "x - brd | x - brd | x - brd | x - brd | x - brd | x - brd | x - brd",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 23:06:29",
+        },
+        Lordgore: {
+            windows: 2,
+            message: "x - brd | x - brd",
+            checkForError: false,
+            xClaim: false,
+            xKill: false,
+            timestamp: "2024-11-06 17:06:21",
+        },
+        Krados: {
+            windows: 6,
+            message: "x - whm | x - whm | x - whm | x - whm | x - whm | x - whm",
+            checkForError: false,
+            xClaim: false,
+            xKill: false,
+            timestamp: "2024-11-06 21:06:07",
+        },
+        Rhelk: {
+            windows: 8,
+            message: "x - whm | x - whm | x - whm | x - whm | x - whm | x - whm | x - whm | x - whm",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 23:07:26",
+        },
+        Caley: {
+            windows: 3,
+            message: "x - smn | x - smn | x - smn",
+            checkForError: false,
+            xClaim: false,
+            xKill: false,
+            timestamp: "2024-11-06 19:05:13",
+        },
+        Donovan: {
+            windows: 5,
+            message: "x - smn | x - smn | x - smn | x - smn | x - smn",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 23:05:25",
+        },
+        Samseny: {
+            windows: 3,
+            message: "x - smn | x - smn | x - smn",
+            checkForError: false,
+            xClaim: false,
+            xKill: false,
+            timestamp: "2024-11-06 19:05:03",
+        },
+        Shei: {
+            windows: 1,
+            message: "x - brd",
+            checkForError: false,
+            xClaim: false,
+            xKill: false,
+            timestamp: "2024-11-06 17:06:18",
+        },
+        Pestii: {
+            windows: 4,
+            message: "x - rdm | x - rdm | x - rdm | x - rdm",
+            checkForError: false,
+            xClaim: false,
+            xKill: false,
+            timestamp: "2024-11-06 20:05:05",
+        },
+        Thris: {
+            windows: 5,
+            message: "x - blm | x - blm | x - blm | x - blm | x - blm",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 23:05:05",
+        },
+        Samuraijake: {
+            windows: 6,
+            message: "x - smn | x - smn | x - smn | x - smn | x - smn | x - smn",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 23:05:21",
+        },
+        Cocopuff: {
+            windows: 2,
+            message: "x - rdm | x - rdm",
+            checkForError: false,
+            xClaim: false,
+            xKill: false,
+            timestamp: "2024-11-06 19:08:37",
+        },
+        Habiba: {
+            windows: 2,
+            message: "x - brd | x - brd",
+            checkForError: false,
+            xClaim: false,
+            xKill: false,
+            timestamp: "2024-11-06 19:09:18",
+        },
+        Faeyn: {
+            windows: 5,
+            message: "x - smn | x - smn | x - smn | x - smn | x - smn",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 23:05:17",
+        },
+        Bigfrosty: {
+            windows: 3,
+            message: "x - brd | x - brd | x - brd",
+            checkForError: false,
+            xClaim: false,
+            xKill: false,
+            timestamp: "2024-11-06 22:07:17",
+        },
+        Ban: {
+            windows: 2,
+            message: "x - smn | x - smn",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 23:07:32",
+        },
+        Yinah: {
+            windows: 5,
+            message: "x - blm | x - blm | x - blm | x - blm | x - blm",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 23:05:23",
+        },
+        Foopy: {
+            windows: 3,
+            message: "x - smn | x - smn | x - smn | x - smn kill",
+            checkForError: false,
+            xClaim: false,
+            xKill: true,
+            timestamp: "2024-11-06 23:12:19",
+        },
+        Demonterror: {
+            windows: 1,
+            message: "x - smn",
+            checkForError: false,
+            xClaim: false,
+            xKill: false,
+            timestamp: "2024-11-06 19:06:21",
+        },
+        Chuchu: {
+            windows: 3,
+            message: "x - rdm | x - rdm | x - rdm",
+            checkForError: false,
+            xClaim: false,
+            xKill: false,
+            timestamp: "2024-11-06 21:09:38",
+        },
+        Yupitan: {
+            windows: 1,
+            message: "x whm | x whm",
+            checkForError: false,
+            xClaim: false,
+            xKill: true,
+            timestamp: "2024-11-06 23:12:08",
+        },
+        Mayer: {
+            windows: 4,
+            message: "x - blm | x - blm | x - blm | x - blm",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 23:05:31",
+        },
+        Riverking: {
+            windows: 3,
+            message: "x-behescout | x - drk | x - drk",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 23:06:58",
+        },
+        Suds: {
+            windows: 3,
+            message: "x - smn | x - smn | x - smn",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 23:05:58",
+        },
+        Nuke: {
+            windows: 3,
+            message: "x - smn | x - blm | x - blm",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 23:08:10",
+        },
+        Chronus: {
+            windows: 2,
+            message: "x - rdm | x - rdm",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 23:05:13",
+        },
+        Bear: {
+            windows: 1,
+            message: "x - pld",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 23:05:11",
+        },
+        Switchstance: {
+            windows: 1,
+            message: "x - brd",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 23:05:27",
+        },
+        Cyr: {
+            windows: 1,
+            message: "x - brd",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 23:06:54",
+        },
+        Precarious: {
+            windows: 1,
+            message: "x - rdm",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 23:06:54",
+        },
+        Nesta: {
+            windows: 0,
+            message: "x - smn kill",
+            checkForError: false,
+            xClaim: false,
+            xKill: true,
+            timestamp: "2024-11-06 23:16:37",
+        },
+        Venatrix: {
+            windows: 0,
+            message: "x - smn kill",
+            checkForError: false,
+            xClaim: false,
+            xKill: true,
+            timestamp: "2024-11-06 23:18:51",
+        },
+        Arturiel: {
+            windows: 0,
+            message: "x - rdm kill",
+            checkForError: false,
+            xClaim: false,
+            xKill: true,
+            timestamp: "2024-11-06 23:19:00",
+        },
+        Kamakaze: {
+            windows: 0,
+            message: "x-th kill thf",
+            checkForError: false,
+            xClaim: false,
+            xKill: true,
+            timestamp: "2024-11-06 23:39:46",
+        },
+        Sqook: {
+            windows: 0,
+            message: "x- whm kill",
+            checkForError: false,
+            xClaim: false,
+            xKill: true,
+            timestamp: "2024-11-06 23:44:16",
+        },
+        Morrigan: {
+            windows: 0,
+            message: "x - kill pld",
+            checkForError: false,
+            xClaim: false,
+            xKill: true,
+            timestamp: "2024-11-06 23:52:35",
+        },
+    });
+
+    t.end();
+});
+
+test("Tiamat Channel To DKP - 'x - job' input validation - sleep available, less than 6 members", async (t) => {
+    const mockTiamatChannel = loadJsonFile(
+        "test_data/tiamat_6_spaced_job_input_sleep_sub_6.json"
+    ) as TextChannel & { messages: Message[] };
+    const { windowsPerMember: parsedWindowsPerMember } =
+        channelMessagesToWindows(mockTiamatChannel);
+    // console.log({ parsedWindowsPerMember });
+    t.deepEqual(parsedWindowsPerMember, {
+        Darth: {
+            windows: 1,
+            message: "x - whm",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 14:06:33",
+        },
+        Leob: {
+            windows: 1,
+            message: "x - rdm",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 14:06:33",
+        },
+        Tarnish: {
+            windows: 1,
+            message: "x - pld",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 14:06:33",
+        },
+        Naten: {
+            windows: 1,
+            message: "x - pld",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 14:06:33",
+        },
+        Sabyrd: {
+            windows: 1,
+            message: "x - brd",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 14:06:33",
+        },
+    });
+
+    t.end();
+});
+
+test("Tiamat Channel To DKP - 'x - job' input validation - no sleep available, less than 6 members", async (t) => {
+    const mockTiamatChannel = loadJsonFile(
+        "test_data/tiamat_6_spaced_job_input_no_sleep_over_6.json"
+    ) as TextChannel & { messages: Message[] };
+    const { windowsPerMember: parsedWindowsPerMember } =
+        channelMessagesToWindows(mockTiamatChannel);
+    // console.log({ parsedWindowsPerMember });
+    t.deepEqual(parsedWindowsPerMember, {
+        Darth: {
+            windows: 1,
+            message: "x - whm",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 14:06:33",
+        },
+        Tarnish: {
+            windows: 1,
+            message: "x - pld",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 14:06:33",
+        },
+        Naten: {
+            windows: 1,
+            message: "x - pld",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 14:06:33",
+        },
+        Sabyrd: {
+            windows: 1,
+            message: "x - brd",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 14:06:33",
+        },
+        Dogs: {
+            windows: 1,
+            message:
+                "x - drk",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 14:06:33",
+        },
+        Nicolesixtynine: {
+            windows: 1,
+            message:
+                "x - smn",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 14:06:33",
+        },
+        Riccu: {
+            windows: 1,
+            message: "x - smn",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 14:06:33",
+        },
+    });
+
+    t.end();
+});
+
+// Negative case: member attended window, but not enough to hold, so no DKP awarded due to insufficient hold.
+test("Tiamat Channel To DKP - 'x - job' input validation - no sleep available, more than 6 members", async (t) => {
+    const mockTiamatChannel = loadJsonFile(
+        "test_data/tiamat_6_spaced_job_input_no_sleep_sub_6.json"
+    ) as TextChannel & { messages: Message[] };
+    const { windowsPerMember: parsedWindowsPerMember } =
+        channelMessagesToWindows(mockTiamatChannel);
+    // console.log({ parsedWindowsPerMember });
+    t.deepEqual(parsedWindowsPerMember, {});
+    
+    t.end();
+});
+
 test("Jorm CTA Test", async (t) => {
     const mockTiamatChannel = loadJsonFile(
         "test_data/nov28-jorm-cta.json"
