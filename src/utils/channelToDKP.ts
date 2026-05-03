@@ -272,7 +272,7 @@ export const channelMessagesToWindows = (
           if (
             !windowTimedOutForXIns &&
             (!popMsgTimestamp ||
-              new Date(message.createdTimestamp).getTime() < popMsgTimestamp) && 
+              new Date(message.createdTimestamp).getTime() < popMsgTimestamp) &&
             validJobXinPattern.test(messageContent)
           ) {
             if (!windowsPerMember[memberName]) {
@@ -864,12 +864,12 @@ const checkIfValidClaimWindowForTiamat = (
   const hasWHM = messages.some((msg) => whmPattern.test(msg.content));
   const hasBRD = messages.some((msg) => brdPattern.test(msg.content));
   const hasSleeper = messages.some((msg) => sleepPattern.test(msg.content));
- 
+  
   const hasSixPlus =
   messages.filter((msg) => msg.content.match(validJobXinNoPaddingPattern)).length > 6 || 
   messages.filter((msg) => msg.content.match(validJobXinSpacePaddingPattern)).length > 6;
 
-  return hasTank && hasWHM && hasBRD && (hasSixPlus|| hasSleeper);
+  return hasTank && hasWHM && hasBRD && (hasSixPlus || hasSleeper);
 };
 
 const buildPlayerWindowRowsToDelimitedCSV = (attendance: {
