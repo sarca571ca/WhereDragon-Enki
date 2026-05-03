@@ -864,7 +864,7 @@ const checkIfValidClaimWindowForTiamat = (
   const hasWHM = messages.some((msg) => whmPattern.test(msg.content));
   const hasBRD = messages.some((msg) => brdPattern.test(msg.content));
   const hasSleeper = messages.some((msg) => sleepPattern.test(msg.content));
-  
+
   const hasSixPlus =
   messages.filter((msg) => msg.content.match(validJobXinNoPaddingPattern)).length > 6 || 
   messages.filter((msg) => msg.content.match(validJobXinSpacePaddingPattern)).length > 6;
