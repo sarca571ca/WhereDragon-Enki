@@ -1033,7 +1033,7 @@ test("Tiamat Channel To DKP - 'x - job' input validation - sleep available, less
     t.end();
 });
 
-test("Tiamat Channel To DKP - 'x - job' input validation - no sleep available, less than 6 members", async (t) => {
+test("Tiamat Channel To DKP - 'x - job' input validation - no sleep available, more than 6 members", async (t) => {
     const mockTiamatChannel = loadJsonFile(
         "test_data/tiamat_6_spaced_job_input_no_sleep_over_6.json"
     ) as TextChannel & { messages: Message[] };
@@ -1105,7 +1105,7 @@ test("Tiamat Channel To DKP - 'x - job' input validation - no sleep available, l
 });
 
 // Negative case: member attended window, but not enough to hold, so no DKP awarded due to insufficient hold.
-test("Tiamat Channel To DKP - 'x - job' input validation - no sleep available, more than 6 members", async (t) => {
+test("Tiamat Channel To DKP - 'x - job' input validation - no sleep available, less than 6 members", async (t) => {
     const mockTiamatChannel = loadJsonFile(
         "test_data/tiamat_6_spaced_job_input_no_sleep_sub_6.json"
     ) as TextChannel & { messages: Message[] };
@@ -1113,7 +1113,7 @@ test("Tiamat Channel To DKP - 'x - job' input validation - no sleep available, m
         channelMessagesToWindows(mockTiamatChannel);
     // console.log({ parsedWindowsPerMember });
     t.deepEqual(parsedWindowsPerMember, {});
-    
+
     t.end();
 });
 
