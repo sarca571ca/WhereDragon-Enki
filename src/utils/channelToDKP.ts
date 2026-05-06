@@ -2,6 +2,7 @@ import { TextChannel } from "discord.js";
 import { ParsedWindowsPerMember, HNMTypeChannelKeys } from "../models";
 import { MessageWithDisplayName } from "../types/MessageData";
 import { getDateDataFromUnixTimeStamp } from "./timeUtils";
+import { matchesGlob } from "node:path";
 
 export const channelHeaderRows = (channel: { name: string }) => {
   return buildHeaderRowsToDelimitedCSV(
@@ -84,6 +85,10 @@ const getMessageType: (message: string) => XMsgType = (message) => {
 
 export const validJobXinPattern =
   /^x.*?(scout|tod|blm|rdm|whm|rng|sam|nin|mnk|war|bst|drk|pld|brd|smn|drg|thf)\b/i;
+export const validJobXinNoPaddingPattern =
+  /^x-*?(blm|rdm|whm|rng|sam|nin|mnk|war|bst|drk|pld|brd|smn|drg|thf)\b$/i;
+export const validJobXinSpacePaddingPattern =
+  /^x\s-\s*?(blm|rdm|whm|rng|sam|nin|mnk|war|bst|drk|pld|brd|smn|drg|thf)\b$/i;
 export const validXKillPatternTiamat =
   /x.*?(kill.*?(?:\b[a-z]{3}\b)|(?:\b[a-z]{3}\b).*?kill)/i;
 export const validXKillPattern = /x.*kill/i;
@@ -861,7 +866,8 @@ const checkIfValidClaimWindowForTiamat = (
   const hasSleeper = messages.some((msg) => sleepPattern.test(msg.content));
 
   const hasSixPlus =
-    messages.filter((msg) => msg.content.includes("x-")).length > 6;
+  messages.filter((msg) => msg.content.match(validJobXinNoPaddingPattern)).length > 6 || 
+  messages.filter((msg) => msg.content.match(validJobXinSpacePaddingPattern)).length > 6;
 
   return hasTank && hasWHM && hasBRD && (hasSixPlus || hasSleeper);
 };
