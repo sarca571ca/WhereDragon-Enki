@@ -172,6 +172,174 @@ test("Nov13 KA Test", async (t) => {
   t.end();
 });
 
+test("Nov13 KA Alt Test", async (t) => {
+  const mockKingsChannel = loadJsonFile(
+    "test_data/nov13-ka-alt.json"
+  ) as TextChannel & { messages: MessageWithDisplayName[] };
+
+  const { windowsPerMember: parsedWindowsPerMember } =
+    channelMessagesToWindows(mockKingsChannel);
+
+  // await writeToJSONFile(parsedWindowsPerMember);
+
+  t.deepEqual(parsedWindowsPerMember, {
+    Tarnish: {
+      windows: 0.5,
+      message: "x-alt",
+      xClaim: true,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-13 21:25:47",
+    },
+    Byorn: {
+      windows: 0.5,
+      message: "x-alt",
+      xClaim: true,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-13 21:26:43",
+    },
+    Pestii: {
+      windows: 0.5,
+      message: "x-alt",
+      xClaim: true,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-13 21:26:49",
+    },
+    Ancestor: {
+      windows: 0.5,
+      message: "x-alt",
+      xClaim: true,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-13 21:27:06",
+    },
+    Brandan: {
+      windows: 0.5,
+      message: "x-alt",
+      xClaim: true,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-13 21:27:37",
+    },
+    Sabyrd: {
+      windows: 0.5,
+      message: "x-alt",
+      xClaim: true,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-13 21:31:07",
+    },
+    Chaosmage: {
+      windows: 0.5,
+      message: "x-alt",
+      xClaim: true,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-13 21:31:14",
+    },
+    Dcplee: {
+      windows: 0.5,
+      message: "x-alt",
+      xClaim: true,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-13 21:31:58",
+    },
+    Morrigan: {
+      windows: 0.5,
+      message: "x-alt (aspid tod)",
+      xClaim: true,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-13 21:32:14",
+    },
+    Mathrandir: {
+      windows: 0.5,
+      message: "x-alt",
+      xClaim: true,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-13 21:38:14",
+    },
+    Nar: {
+      windows: 0.5,
+      message: "x-alt",
+      xClaim: true,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-13 21:38:16",
+    },
+    Gogen: {
+      windows: 0.5,
+      message: "x-alt",
+      xClaim: true,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-13 21:41:47",
+    },
+    Cordia: {
+      windows: 0.5,
+      message: "x-alt",
+      xClaim: true,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-13 21:49:17",
+    },
+    Syragon: {
+      windows: 0.5,
+      message: "x-alt",
+      xClaim: true,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-13 21:50:27",
+    },
+    Darth: {
+      windows: 0.5,
+      message: "x-alt",
+      xClaim: true,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-13 21:51:20",
+    },
+    Pengo: {
+      windows: 0.5,
+      message: "x-alt",
+      xClaim: true,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-13 21:51:31",
+    },
+    Naten: {
+      windows: 0.5,
+      message: "x-alt",
+      xClaim: true,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-13 21:56:01",
+    },
+    Bear: {
+      windows: 0.5,
+      message: "x-alt",
+      xClaim: true,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-13 21:59:34",
+    },
+    Nesta: {
+      windows: 0.5,
+      message: "x-alt",
+      xClaim: true,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-13 22:03:04",
+    },
+  });
+
+  t.end();
+});
+
 test("Nov14 KV - no window claim, just KO credits", async (t) => {
   const mockKingsChannel = loadJsonFile(
     "test_data/nov14-kv.json"
@@ -556,6 +724,186 @@ test("Nov15 KV", async (t) => {
   t.end();
 });
 
+test("Nov15 KV Alt", async (t) => {
+  const mockKingsChannel = loadJsonFile(
+    "test_data/nov15-kv-alt.json"
+  ) as TextChannel & { messages: Message[] };
+  const { windowsPerMember: parsedWindowsPerMember } =
+    channelMessagesToWindows(mockKingsChannel);
+  // await writeToJSONFile(parsedWindowsPerMember);
+  t.deepEqual(parsedWindowsPerMember, {
+    Avelain: {
+      windows: 0.5,
+      message: "x-alt",
+      xClaim: false,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-15 08:00:12",
+    },
+    Draxzy: {
+      windows: 0.5,
+      message: "x-alt",
+      xClaim: false,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-15 08:01:39",
+    },
+    Chaosmage: {
+      windows: 0.5,
+      message: "x-alt",
+      xClaim: false,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-15 08:02:08",
+    },
+    Switchstance: {
+      windows: 0.5,
+      message: "x-alt",
+      xClaim: false,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-15 08:07:24",
+    },
+    Lilsheck: {
+      windows: 0.5,
+      message: "x-alt barrymckochinor",
+      xClaim: false,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-15 08:09:05",
+    },
+    Barbar: {
+      windows: 0.5,
+      message: "x-alt",
+      xClaim: false,
+      xKill: false,
+      checkForError: false,
+      timestamp: "2024-11-15 08:09:39",
+    },
+    Arturiel: {
+      windows: 0.5,
+      message: "x-alt",
+      xClaim: false,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-15 08:15:44",
+    },
+    Whereami: {
+      windows: 0.5,
+      message: "x-alt",
+      xClaim: false,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-15 08:23:12",
+    },
+    Mathrandir: {
+      windows: 0.5,
+      message: "x-alt",
+      xClaim: false,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-15 08:34:11",
+    },
+    Poundski: {
+      windows: 0,
+      message: "x-kill",
+      xKill: true,
+      xClaim: false,
+      checkForError: false,
+      timestamp: "2024-11-15 08:39:28",
+    },
+    Miradin: {
+      windows: 0,
+      message: "x-kill",
+      xKill: true,
+      xClaim: false,
+      checkForError: false,
+      timestamp: "2024-11-15 08:47:12",
+    },
+    Novek: {
+      windows: 0,
+      message: "x-kill",
+      xKill: true,
+      xClaim: false,
+      checkForError: false,
+      timestamp: "2024-11-15 08:50:01",
+    },
+    Waky: {
+      windows: 0,
+      message: "x-kill",
+      xKill: true,
+      xClaim: false,
+      checkForError: false,
+      timestamp: "2024-11-15 08:50:22",
+    },
+    Gow: {
+      windows: 0,
+      message: "x-kill",
+      xKill: true,
+      xClaim: false,
+      checkForError: false,
+      timestamp: "2024-11-15 08:53:16",
+    },
+    Syragon: {
+      windows: 0,
+      message: "x-kill",
+      xKill: true,
+      xClaim: false,
+      checkForError: false,
+      timestamp: "2024-11-15 08:55:11",
+    },
+    Midnigh: {
+      windows: 0,
+      message: "x-kill",
+      xKill: true,
+      xClaim: false,
+      checkForError: false,
+      timestamp: "2024-11-15 08:55:16",
+    },
+    Shei: {
+      windows: 0,
+      message: "x-kill",
+      xKill: true,
+      xClaim: false,
+      checkForError: false,
+      timestamp: "2024-11-15 08:55:18",
+    },
+    Koobu: {
+      windows: 0,
+      message: "x-kill",
+      xKill: true,
+      xClaim: false,
+      checkForError: false,
+      timestamp: "2024-11-15 08:55:36",
+    },
+    Yupitan: {
+      windows: 0,
+      message: "x kill",
+      xKill: true,
+      xClaim: false,
+      checkForError: false,
+      timestamp: "2024-11-15 08:55:39",
+    },
+    Cocopuff: {
+      windows: 0,
+      message: "x-kill",
+      xKill: true,
+      xClaim: false,
+      checkForError: false,
+      timestamp: "2024-11-15 08:55:45",
+    },
+    Chronus: {
+      windows: 0,
+      message: "x-kill",
+      xKill: true,
+      xClaim: false,
+      checkForError: false,
+      timestamp: "2024-11-15 08:57:14",
+    },
+  });
+  t.end();
+});
+
 test("Nov15 KA", async (t) => {
   const mockKingsChannel = loadJsonFile(
     "test_data/nov15-ka.json"
@@ -687,6 +1035,146 @@ test("Nov15 KA", async (t) => {
     Yeti: {
       windows: 1,
       message: "x",
+      xClaim: true,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-15 19:21:29",
+    },
+  });
+  t.end();
+});
+
+test("Nov15 KA Alt", async (t) => {
+  const mockKingsChannel = loadJsonFile(
+    "test_data/nov15-ka-alt.json"
+  ) as TextChannel & { messages: Message[] };
+  const { windowsPerMember: parsedWindowsPerMember } =
+    channelMessagesToWindows(mockKingsChannel);
+  // await writeToJSONFile(parsedWindowsPerMember);
+  t.deepEqual(parsedWindowsPerMember, {
+    dapang: {
+      windows: 0.5,
+      message: "x-alt-for-dapang",
+      xClaim: true,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-15 18:17:17",
+    },
+    super: {
+      windows: 0.5,
+      message: "x-alt-for-super",
+      xClaim: true,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-15 18:19:26",
+    },
+    Ancestor: {
+      windows: 0.5,
+      message: "x-alt",
+      xClaim: true,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-15 18:19:30",
+    },
+    Waky: {
+      windows: 0.5,
+      message: "x-alt",
+      xClaim: true,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-15 18:26:01",
+    },
+    Yupitan: {
+      windows: 0.5,
+      message: "x-alt ada scout",
+      xClaim: true,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-15 18:26:37",
+    },
+    Snyaar: {
+      windows: 0.5,
+      message: "x-alt",
+      xClaim: true,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-15 18:26:52",
+    },
+    Demonterror: {
+      windows: 0.5,
+      message: "x-alt",
+      xClaim: true,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-15 18:26:58",
+    },
+    Cyr: {
+      windows: 0.5,
+      message: "x-alt",
+      xClaim: true,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-15 18:28:13",
+    },
+    Brandan: {
+      windows: 0.5,
+      message: "x-alt",
+      xClaim: true,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-15 18:29:48",
+    },
+    Dogs: {
+      windows: 0.5,
+      message: "x-alt",
+      xClaim: true,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-15 18:34:22",
+    },
+    Dcplee: {
+      windows: 0.5,
+      message: "x-alt",
+      xClaim: true,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-15 18:34:39",
+    },
+    Darth: {
+      windows: 0.5,
+      message: "x-alt",
+      xClaim: true,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-15 18:34:52",
+    },
+    Mathrandir: {
+      windows: 0.5,
+      message: "x-alt",
+      xClaim: true,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-15 18:35:04",
+    },
+    Arturiel: {
+      windows: 0.5,
+      message: "x-alt",
+      xClaim: true,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-15 18:36:24",
+    },
+    Morrigan: {
+      windows: 0.5,
+      message: "x-alt2",
+      xClaim: true,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-15 18:47:45",
+    },
+    Yeti: {
+      windows: 0.5,
+      message: "x-alt",
       xClaim: true,
       xKill: true,
       checkForError: false,
