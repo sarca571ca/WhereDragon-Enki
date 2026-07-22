@@ -49,6 +49,17 @@ export const extractNumberAfterX = (s: string): number | null => {
   }
 };
 
+export const extractNumberAfterXAlt = (s: string): number | null => {
+const regex = /^[xX]\s*(-alt)?\s*(\d+)/;
+  const match = s.match(regex);
+
+  if (match) {
+    return parseInt(match[2], 10);
+  } else {
+    return null;
+  }
+};
+
 export type XMsgType =
   | "X"
   | "X-POP"
@@ -56,7 +67,8 @@ export type XMsgType =
   | "X-CLAIM"
   | "X-OUT"
   | "X-SCOUT"
-  | "INVALID";
+  | "INVALID"
+  | "X-ALT";
 
 const getMessageType: (message: string) => XMsgType = (message) => {
   const msg = message.toLocaleLowerCase().trim();
@@ -75,9 +87,14 @@ const getMessageType: (message: string) => XMsgType = (message) => {
     case msg === "x-forgot":
     case msg === "x":
       return "X";
-    case (validFirstXinPattern.test(msg) && !msg.includes("kill")) ||
+    case msg === "x-alt":
+      return "X-ALT";
+    case (validFirstXinPattern.test(msg) && !validFirstXAltPattern.test(msg) && !msg.includes("kill")) ||
       (msg.includes("x") && msg.includes("forgot")):
       return "X";
+    case (validFirstXAltPattern.test(msg) && !msg.includes("kill")) ||
+      (msg.includes("x") && msg.includes("forgot")):
+      return "X-ALT";
     default:
       return "INVALID";
   }
@@ -92,8 +109,11 @@ export const validJobXinSpacePaddingPattern =
 export const validXKillPatternTiamat =
   /x.*?(kill.*?(?:\b[a-z]{3}\b)|(?:\b[a-z]{3}\b).*?kill)/i;
 export const validXKillPattern = /x.*kill/i;
+export const validXAltKillPattern = /x-alt.*kill/i;
 export const validFirstXinPattern =
   /^x-?\s*(?:(?!(?<!sc)out\b)(?![0-9])([^(]\S+\s+scout|\w+(?:\s+\w+)*|\([^)]+\))?)?$/i;
+export const validFirstXAltPattern =
+  /^x-alt-?\s*(?:(?!(?<!sc)out\b)(?![0-9])([^(]\S+\s+scout|\w+(?:\s+\w+)*|\([^)]+\))?)?$/i;
 
 export const channelMessagesToWindows = (
   channel: TextChannel & { messages: MessageWithDisplayName[] },
@@ -121,10 +141,15 @@ export const channelMessagesToWindows = (
         const messageContent = message.content.trim().toLocaleLowerCase();
 
         const xInFor = extractXinForMember(messageContent);
+        const xAltFor = extractXAltForMember(messageContent);
         const xOutFor = extractXOutFor(messageContent);
 
         if (xInFor !== null) {
           memberName = xInFor;
+        }
+
+        if (xAltFor !== null) {
+          memberName = xAltFor;
         }
 
         if (xOutFor !== null) {
@@ -136,9 +161,9 @@ export const channelMessagesToWindows = (
           // eg "x"
           // todo: add admin :greencheck: check for scouts
           if (
-            xInFor ||
+            (xInFor && !xAltFor) ||
             messageContent === "x" ||
-            (messageContent.includes("x") &&
+            (messageContent.includes("x") && !messageContent.includes("x-alt") &&
               (messageContent.includes("scout") ||
                 messageContent.includes("tod"))) ||
             (windowNumberForXIn !== null && windowNumberForXIn > 0)
@@ -160,6 +185,46 @@ export const channelMessagesToWindows = (
           ) {
             windowsPerMember[memberName] = {
               windows: 1,
+              xClaim: true,
+              xKill: true,
+              message: messageContent,
+              checkForError: true,
+              timestamp: getDateDataFromUnixTimeStamp(
+                message.createdTimestamp
+              ).toString(),
+            };
+          }
+        }
+
+        if (!windowsPerMember[memberName]) {
+          const windowNumberForXAlt = extractNumberAfterXAlt(messageContent);
+          // eg "x-alt"
+          // todo: add admin :greencheck: check for scouts
+          if (
+            xAltFor ||
+            messageContent === "x-alt" ||
+            (messageContent.includes("x-alt") &&
+              (messageContent.includes("scout") ||
+                messageContent.includes("tod"))) ||
+            (windowNumberForXAlt !== null && windowNumberForXAlt > 0)
+          ) {
+            windowsPerMember[memberName] = {
+              windows: 0.5,
+              message: messageContent,
+              xClaim: true,
+              xKill: true,
+              checkForError: false,
+              timestamp: getDateDataFromUnixTimeStamp(
+                message.createdTimestamp
+              ).toString(),
+            };
+            // eg "x forgot" "x-forgot"
+          } else if (
+            messageContent.includes("x-alt") &&
+            messageContent.includes("forgot")
+          ) {
+            windowsPerMember[memberName] = {
+              windows: 0.5,
               xClaim: true,
               xKill: true,
               message: messageContent,
@@ -363,10 +428,15 @@ export const channelMessagesToWindows = (
 
           const messageContent = message.content.trim().toLocaleLowerCase();
           const xInFor = extractXinForMember(messageContent);
+          const xAltFor = extractXAltForMember(messageContent);
           const xOutFor = extractXOutFor(messageContent);
 
           if (xInFor !== null) {
             memberName = xInFor;
+          }
+
+          if (xAltFor !== null) {
+            memberName = xAltFor;
           }
 
           if (xOutFor !== null) {
@@ -378,48 +448,100 @@ export const channelMessagesToWindows = (
             messageContent.includes("out") &&
             !messageContent.includes("scout");
 
+          const isAltMessage = messageContent.includes("alt")
+
           const validXKill = validXKillPattern.test(messageContent);
+          const validXAltKill = validXAltKillPattern.test(messageContent);
 
           const windowNumberForXIn = extractNumberAfterX(messageContent);
+          const windowNumberForXAlt = extractNumberAfterXAlt(messageContent);
           const firstWindowXIn = validFirstXinPattern.test(messageContent);
+          const firstWindowXAlt = validFirstXAltPattern.test(messageContent);
 
           // eg "x" or "x1"
-          if (
-            !validXKill &&
-            (firstWindowXIn ||
-              xInFor ||
-              (windowNumberForXIn === 1 && !windowsPerMember[memberName]))
-          ) {
-            windowsPerMember[memberName] = {
-              windows: totalWindows - notFirstWindowAdjuster,
-              message: messageContent,
-              xClaim: true,
-              xKill: true,
-              checkForError: false,
-              timestamp: getDateDataFromUnixTimeStamp(
-                message.createdTimestamp
-              ).toString(),
-            };
+          if (!isAltMessage) {
+            if (
+              !validXKill &&
+              (firstWindowXIn ||
+                xInFor ||
+                (windowNumberForXIn === 1 && !windowsPerMember[memberName]))
+            ) {
+              windowsPerMember[memberName] = {
+                windows: totalWindows - notFirstWindowAdjuster,
+                message: messageContent,
+                xClaim: true,
+                xKill: true,
+                checkForError: false,
+                timestamp: getDateDataFromUnixTimeStamp(
+                  message.createdTimestamp
+                ).toString(),
+              };
+            }
+          }
+
+          if (isAltMessage) {
+            // eg "x-alt" or "x-alt1"
+            if (
+              !validXAltKill &&
+              (firstWindowXAlt || // Change to firstWindowXAltIn?
+                xAltFor ||
+                (windowNumberForXAlt === 1 && !windowsPerMember[memberName]))
+            ) {
+              windowsPerMember[memberName] = {
+                windows: (totalWindows - notFirstWindowAdjuster) / 2,
+                message: messageContent,
+                xClaim: true,
+                xKill: true,
+                checkForError: false,
+                timestamp: getDateDataFromUnixTimeStamp(
+                  message.createdTimestamp
+                ).toString(),
+              };
+            }
           }
 
           // eg "x2" "x 3" "X2 darkfarkee"
-          if (
-            !validXKill &&
-            !isXOut &&
-            !firstWindowXIn &&
-            windowNumberForXIn &&
-            windowNumberForXIn > 1
-          ) {
-            windowsPerMember[memberName] = {
-              windows: totalWindows + -(windowNumberForXIn - 1),
-              message: messageContent,
-              checkForError: false,
-              xClaim: true,
-              xKill: true,
-              timestamp: getDateDataFromUnixTimeStamp(
-                message.createdTimestamp
-              ).toString(),
-            };
+          if (!isAltMessage) {
+            if (
+              !validXKill &&
+              !isXOut &&
+              !firstWindowXIn &&
+              windowNumberForXIn &&
+              windowNumberForXIn > 1
+            ) {
+              windowsPerMember[memberName] = {
+                windows: totalWindows + -(windowNumberForXIn - 1),
+                message: messageContent,
+                checkForError: false,
+                xClaim: true,
+                xKill: true,
+                timestamp: getDateDataFromUnixTimeStamp(
+                  message.createdTimestamp
+                ).toString(),
+              };
+            }
+          }
+
+          // eg "x-alt2" "x-alt 3" "X-alt2 darkfarkee"
+          if (isAltMessage) {
+            if (
+              !validXAltKill &&
+              !isXOut &&
+              !firstWindowXAlt && // Change to firstWindowXAltIn?
+              windowNumberForXAlt &&
+              windowNumberForXAlt > 1
+            ) {
+              windowsPerMember[memberName] = {
+                windows: (totalWindows + -(windowNumberForXAlt - 1)) / 2,
+                message: messageContent,
+                checkForError: false,
+                xClaim: true,
+                xKill: true,
+                timestamp: getDateDataFromUnixTimeStamp(
+                  message.createdTimestamp
+                ).toString(),
+              };
+            }
           }
 
           // eg "x-out" "xout" "x out"
@@ -445,7 +567,7 @@ export const channelMessagesToWindows = (
             ].message = `${windowsPerMember[memberName].message} | ${messageContent}`;
           }
           // eg "x-kill" "xkill" "x kill"
-          if (validXKill) {
+          if (validXKill || validXAltKill) {
             windowsPerMember[memberName] = {
               windows: 0,
               message: messageContent,
@@ -475,6 +597,19 @@ export const channelMessagesToWindows = (
         if (messageType === "X") {
           windowsPerMember[memberName] = {
             windows: 1,
+            message: messageContent,
+            xClaim: false,
+            xKill: false,
+            checkForError: false,
+            timestamp: getDateDataFromUnixTimeStamp(
+              message.createdTimestamp
+            ).toString(),
+          };
+        }
+
+        if (messageType === "X-ALT") {
+          windowsPerMember[memberName] = {
+            windows: 0.5,
             message: messageContent,
             xClaim: false,
             xKill: false,
@@ -925,6 +1060,18 @@ export const extractDayNumberAfterKing = (s: string): number | null => {
 
 export const extractXinForMember = (input: string): string | null => {
   const regex = /x-for-([a-z]+)/i;
+
+  const match = regex.exec(input);
+
+  if (match && match[1]) {
+    return match[1];
+  }
+
+  return null;
+};
+
+export const extractXAltForMember = (input: string): string | null => {
+  const regex = /x-alt-for-([a-z]+)/i;
 
   const match = regex.exec(input);
 

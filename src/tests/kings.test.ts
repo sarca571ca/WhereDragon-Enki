@@ -462,6 +462,196 @@ test("Nov05 Ada4", async (t) => {
     t.end();
 });
 
+test("Nov05 Ada4 - alt camp", async (t) => {
+    const mockKingsChannel = loadJsonFile(
+        "test_data/nov05-ada4-alt.json"
+    ) as TextChannel & { messages: Message[] };
+    const { windowsPerMember: parsedWindowsPerMember } =
+        channelMessagesToWindows(mockKingsChannel);
+    // await writeToJSONFile(parsedWindowsPerMember);
+    t.deepEqual(parsedWindowsPerMember, {
+        Karianna: {
+            windows: 1,
+            message: "x-alt",
+            xClaim: true,
+            xKill: true,
+            checkForError: false,
+            timestamp: "2024-11-05 09:17:03",
+        },
+        Yeti: {
+            windows: 1,
+            message: "x-alt (ka scout)",
+            xClaim: true,
+            xKill: true,
+            checkForError: false,
+            timestamp: "2024-11-05 09:17:51",
+        },
+        Snyaar: {
+            windows: 1,
+            message: "x-alt",
+            xClaim: true,
+            xKill: true,
+            checkForError: false,
+            timestamp: "2024-11-05 09:18:02",
+        },
+        Arturiel: {
+            windows: 1,
+            message: "x-alt",
+            xClaim: true,
+            xKill: true,
+            checkForError: false,
+            timestamp: "2024-11-05 09:19:17",
+        },
+        Cocopuff: {
+            windows: 1,
+            message: "x-alt",
+            xClaim: true,
+            xKill: true,
+            checkForError: false,
+            timestamp: "2024-11-05 09:19:22",
+        },
+        Foopy: {
+            windows: 1,
+            message: "x-alt",
+            xClaim: true,
+            xKill: true,
+            checkForError: false,
+            timestamp: "2024-11-05 09:19:44",
+        },
+        Brandan: {
+            windows: 1,
+            message: "x-alt",
+            xClaim: true,
+            xKill: true,
+            checkForError: false,
+            timestamp: "2024-11-05 09:20:27",
+        },
+        Morrigan: {
+            windows: 1,
+            message: "x-alt",
+            xClaim: true,
+            xKill: true,
+            checkForError: false,
+            timestamp: "2024-11-05 09:21:12",
+        },
+        Tarnish: {
+            windows: 1,
+            message: "x-alt",
+            xClaim: true,
+            xKill: true,
+            checkForError: false,
+            timestamp: "2024-11-05 09:21:56",
+        },
+        Shei: {
+            windows: 1,
+            message: "x-alt",
+            xClaim: true,
+            xKill: true,
+            checkForError: false,
+            timestamp: "2024-11-05 09:21:59",
+        },
+        Nicolesixtynine: {
+            windows: 1,
+            message: "x-alt",
+            xClaim: true,
+            xKill: true,
+            checkForError: false,
+            timestamp: "2024-11-05 09:22:25",
+        },
+        Rhelk: {
+            windows: 1,
+            message: "x-alt",
+            xClaim: true,
+            xKill: true,
+            checkForError: false,
+            timestamp: "2024-11-05 09:22:38",
+        },
+        Syragon: {
+            windows: 1,
+            message: "x-alt",
+            xClaim: true,
+            xKill: true,
+            checkForError: false,
+            timestamp: "2024-11-05 09:22:40",
+        },
+        Chaosmage: {
+            windows: 1,
+            message: "x-alt",
+            xClaim: true,
+            xKill: true,
+            checkForError: false,
+            timestamp: "2024-11-05 09:24:15",
+        },
+        Naten: {
+            windows: 1,
+            message: "x-alt",
+            xClaim: true,
+            xKill: true,
+            checkForError: false,
+            timestamp: "2024-11-05 09:24:31",
+        },
+        Mayer: {
+            windows: 1,
+            message: "x-alt",
+            xClaim: true,
+            xKill: true,
+            checkForError: false,
+            timestamp: "2024-11-05 09:25:24",
+        },
+        // TODO: Is this valid? Pending response from Diamond, but I am feeling that "x-1" is not a valid x-in and by extension, "x-alt-1" is invlaid. TBD though.
+        // Riccu: {
+        //     windows: 1,
+        //     message: "x-alt-1",
+        //     xClaim: true,
+        //     xKill: true,
+        //     checkForError: false,
+        //     timestamp: "2024-11-05 09:25:42",
+        // },
+        Tuple: {
+            windows: 0.5,
+            message: "x-alt2",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-05 09:27:20",
+        },
+        Voidedge: {
+            windows: 0.5,
+            message: "x-alt2",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-05 09:29:17",
+        },
+        Magnum: {
+            windows: 0.5,
+            message: "x-alt2",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-05 09:29:36",
+        },
+        Senormiyagi: {
+            windows: 0.5,
+            message: "x-alt2",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-05 09:29:49",
+        },
+        Sabyrd: {
+            windows: 0.5,
+            message: "x-alt2",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-05 09:31:00",
+        },
+    });
+
+    t.end();
+});
+
 test("Nov06 Ada5", async (t) => {
     const mockKingsChannel = loadJsonFile(
         "test_data/nov06-ada5.json"
