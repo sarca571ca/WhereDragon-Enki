@@ -1075,8 +1075,7 @@ test("Tiamat Channel To DKP - 'x - job' input validation - no sleep available, m
         },
         Dogs: {
             windows: 1,
-            message:
-                "x - drk",
+            message: "x - drk",
             checkForError: false,
             xClaim: true,
             xKill: true,
@@ -1094,6 +1093,76 @@ test("Tiamat Channel To DKP - 'x - job' input validation - no sleep available, m
         Riccu: {
             windows: 1,
             message: "x - smn",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 14:06:33",
+        },
+    });
+
+    t.end();
+});
+
+test("Tiamat Channel To DKP - 'x - job' input validation - no sleep available, more than 6 members - Alt Camp", async (t) => {
+    const mockTiamatChannel = loadJsonFile(
+        "test_data/tiamat_6_spaced_job_input_no_sleep_over_6-alt-camp.json"
+    ) as TextChannel & { messages: Message[] };
+    const { windowsPerMember: parsedWindowsPerMember } =
+        channelMessagesToWindows(mockTiamatChannel);
+    // console.log({ parsedWindowsPerMember });
+    t.deepEqual(parsedWindowsPerMember, {
+        Darth: {
+            windows: 0.5,
+            message: "x - alt - whm",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 14:06:33",
+        },
+        Tarnish: {
+            windows: 0.5,
+            message: "x - alt - pld",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 14:06:33",
+        },
+        Naten: {
+            windows: 0.5,
+            message: "x - alt - pld",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 14:06:33",
+        },
+        Sabyrd: {
+            windows: 0.5,
+            message: "x - alt - brd",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 14:06:33",
+        },
+        Dogs: {
+            windows: 0.5,
+            message:
+                "x - alt - drk",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 14:06:33",
+        },
+        Nicolesixtynine: {
+            windows: 0.5,
+            message: "x - alt - smn",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 14:06:33",
+        },
+        Riccu: {
+            windows: 0.5,
+            message: "x - alt - smn",
             checkForError: false,
             xClaim: true,
             xKill: true,
