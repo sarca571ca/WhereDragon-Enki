@@ -123,6 +123,8 @@ export const validJobXAltinSpacePaddingPattern =
   /^x\s-alt-\s*?(blm|rdm|whm|rng|sam|nin|mnk|war|bst|drk|pld|brd|smn|drg|thf)\b$/i;
 export const validXKillPatternTiamat =
   /x.*?(kill.*?(?:\b[a-z]{3}\b)|(?:\b[a-z]{3}\b).*?kill)/i;
+export const validXAltKillPatternTiamat =
+  /x-alt.*?(kill.*?(?:\b[a-z]{3}\b)|(?:\b[a-z]{3}\b).*?kill)/i;
 export const validXKillPattern = /x.*kill/i;
 export const validXAltKillPattern = /x-alt.*kill/i;
 export const validFirstXinPattern =
@@ -418,7 +420,8 @@ export const channelMessagesToWindows = (
               }
             }
           } else if (
-            (validXKillPatternTiamat.test(messageContent) ||
+            (validXKillPatternTiamat.test(messageContent) || 
+              validXAltKillPatternTiamat.test(messageContent) ||
               validJobXinPattern.test(messageContent)) && // allow for x-job and x-alt-job to be treated like x-kill in case they x-'ed in past the 60sec cut off
             isLastWindow
           ) {
