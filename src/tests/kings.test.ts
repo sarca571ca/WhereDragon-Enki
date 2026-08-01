@@ -920,15 +920,14 @@ test("Nov05 Ada4 - alt camp", async (t) => {
             checkForError: false,
             timestamp: "2024-11-05 09:25:24",
         },
-        // TODO: Is this valid? Pending response from Diamond, but I am feeling that "x-1" is not a valid x-in and by extension, "x-alt-1" is invlaid. TBD though.
-        // Riccu: {
-        //     windows: 1,
-        //     message: "x-alt-1",
-        //     xClaim: true,
-        //     xKill: true,
-        //     checkForError: false,
-        //     timestamp: "2024-11-05 09:25:42",
-        // },
+        Riccu: {
+            windows: 1,
+            message: "x-alt1",
+            xClaim: true,
+            xKill: true,
+            checkForError: false,
+            timestamp: "2024-11-05 09:25:42",
+        },
         Tuple: {
             windows: 0.5,
             message: "x-alt2",

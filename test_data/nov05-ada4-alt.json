@@ -3095,7 +3095,7 @@
       "createdTimestamp": 1730816742707,
       "type": 0,
       "system": false,
-      "content": "x-alt-1",
+      "content": "x-alt1",
       "author": {
         "id": "883357155024072755",
         "bot": false,
@@ -3136,7 +3136,7 @@
           "createdTimestamp": 1730816742707,
           "type": 0,
           "system": false,
-          "content": "x-alt-1",
+          "content": "x-alt1",
           "authorId": "883357155024072755",
           "pinned": false,
           "tts": false,
@@ -3168,7 +3168,7 @@
           "interaction": null,
           "poll": null,
           "call": null,
-          "cleanContent": "x-alt-1"
+          "cleanContent": "x-alt1"
         }
       },
       "mentions": {
