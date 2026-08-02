@@ -172,38 +172,6 @@ test("Nov13 KA Test", async (t) => {
   t.end();
 });
 
-test("Nov13 KA Alt Camp Test", async (t) => {
-  const mockKingsChannel = loadJsonFile(
-    "test_data/nov13-ka-alt-camp.json"
-  ) as TextChannel & { messages: MessageWithDisplayName[] };
-
-  const { windowsPerMember: parsedWindowsPerMember } =
-    channelMessagesToWindows(mockKingsChannel);
-
-  // await writeToJSONFile(parsedWindowsPerMember);
-
-  t.deepEqual(parsedWindowsPerMember, {
-    Tarnish: {
-      windows: 1,
-      message: "x",
-      xClaim: true,
-      xKill: true,
-      checkForError: false,
-      timestamp: "2024-11-13 21:32:14",
-    },
-    Cordia: {
-      windows: 0.5,
-      message: "x-alt",
-      xClaim: true,
-      xKill: true,
-      checkForError: false,
-      timestamp: "2024-11-13 21:49:17",
-    },
-  });
-
-  t.end();
-});
-
 test("Nov14 KV - no window claim, just KO credits", async (t) => {
   const mockKingsChannel = loadJsonFile(
     "test_data/nov14-kv.json"
@@ -588,42 +556,6 @@ test("Nov15 KV", async (t) => {
   t.end();
 });
 
-test("Nov15 KV Alt Camp Test", async (t) => {
-  const mockKingsChannel = loadJsonFile(
-    "test_data/nov15-kv-alt-camp.json"
-  ) as TextChannel & { messages: Message[] };
-  const { windowsPerMember: parsedWindowsPerMember } =
-    channelMessagesToWindows(mockKingsChannel);
-  // await writeToJSONFile(parsedWindowsPerMember);
-  t.deepEqual(parsedWindowsPerMember, {
-    Avelain: {
-      windows: 0.5,
-      message: "x-alt",
-      xClaim: false,
-      xKill: true,
-      checkForError: false,
-      timestamp: "2024-11-15 08:00:12",
-    },
-    Poundski: {
-      windows: 0,
-      message: "x-alt-kill",
-      xKill: true,
-      xClaim: false,
-      checkForError: false,
-      timestamp: "2024-11-15 08:39:28",
-    },
-    Miradin: {
-      windows: 1.5,
-      message: "x-alt-pop",
-      xKill: false,
-      xClaim: false,
-      checkForError: false,
-      timestamp: "2024-11-15 08:47:12",
-    },
-  });
-  t.end();
-});
-
 test("Nov15 KA", async (t) => {
   const mockKingsChannel = loadJsonFile(
     "test_data/nov15-ka.json"
@@ -759,6 +691,74 @@ test("Nov15 KA", async (t) => {
       xKill: true,
       checkForError: false,
       timestamp: "2024-11-15 19:21:29",
+    },
+  });
+  t.end();
+});
+
+test("Nov13 KA Alt Camp Test", async (t) => {
+  const mockKingsChannel = loadJsonFile(
+    "test_data/nov13-ka-alt-camp.json"
+  ) as TextChannel & { messages: MessageWithDisplayName[] };
+
+  const { windowsPerMember: parsedWindowsPerMember } =
+    channelMessagesToWindows(mockKingsChannel);
+
+  // await writeToJSONFile(parsedWindowsPerMember);
+
+  t.deepEqual(parsedWindowsPerMember, {
+    Tarnish: {
+      windows: 1,
+      message: "x",
+      xClaim: true,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-13 21:32:14",
+    },
+    Cordia: {
+      windows: 0.5,
+      message: "x-alt",
+      xClaim: true,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-13 21:49:17",
+    },
+  });
+
+  t.end();
+});
+
+test("Nov15 KV Alt Camp Test", async (t) => {
+  const mockKingsChannel = loadJsonFile(
+    "test_data/nov15-kv-alt-camp.json"
+  ) as TextChannel & { messages: Message[] };
+  const { windowsPerMember: parsedWindowsPerMember } =
+    channelMessagesToWindows(mockKingsChannel);
+  // await writeToJSONFile(parsedWindowsPerMember);
+  t.deepEqual(parsedWindowsPerMember, {
+    Avelain: {
+      windows: 0.5,
+      message: "x-alt",
+      xClaim: false,
+      xKill: true,
+      checkForError: false,
+      timestamp: "2024-11-15 08:00:12",
+    },
+    Poundski: {
+      windows: 0,
+      message: "x-alt-kill",
+      xKill: true,
+      xClaim: false,
+      checkForError: false,
+      timestamp: "2024-11-15 08:39:28",
+    },
+    Miradin: {
+      windows: 1.5,
+      message: "x-alt-pop",
+      xKill: false,
+      xClaim: false,
+      checkForError: false,
+      timestamp: "2024-11-15 08:47:12",
     },
   });
   t.end();
