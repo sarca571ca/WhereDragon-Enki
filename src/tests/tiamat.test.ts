@@ -1075,7 +1075,8 @@ test("Tiamat Channel To DKP - 'x - job' input validation - no sleep available, m
         },
         Dogs: {
             windows: 1,
-            message: "x - drk",
+            message: 
+                "x - drk",
             checkForError: false,
             xClaim: true,
             xKill: true,
