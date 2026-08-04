@@ -61,9 +61,13 @@ export const execute = async (message: Message) => {
       message.reply("This command cannot be executed in this type of channel.");
     }
   } catch (error) {
+    console.error("Error fetching messages:", error);
     if (message.channel instanceof TextChannel) {
-      console.error("Error fetching messages:", error);
-      await message.channel.send("Error fetching messages.");
+      try {
+        await message.channel.send("Error fetching messages.");
+      } catch (sendError) {
+        console.error("Failed to report error to channel:", sendError);
+      }
     }
   }
 };

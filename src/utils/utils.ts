@@ -1,5 +1,18 @@
 import { createReadStream, readFileSync, writeFileSync } from "fs";
 import csv from "csv-parser";
+import { Client } from "discord.js";
+
+// discord.js's REST manager nulls out its token if any authenticated request
+// gets a 401 back (e.g. from hitting Discord's rate limit on a REST endpoint).
+// That doesn't affect the gateway connection, so the bot looks alive but every
+// REST call (fetch/send/edit) starts throwing "Expected token to be set for
+// this request, but none was present" until the process restarts. `client.token`
+// isn't touched by that, so re-asserting it on the REST manager recovers it.
+export function ensureRestToken(client: Client): void {
+    if (client.token) {
+        client.rest.setToken(client.token);
+    }
+}
 
 // Function to convert an object to a tab-delimited CSV format
 export function objectToTabDelimitedCsv(data: any[]): string {
