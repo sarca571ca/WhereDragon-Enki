@@ -190,9 +190,10 @@ export const channelMessagesToWindows = (
               (messageContent.includes("scout") ||
                 messageContent.includes("tod"))) ||
             (windowNumberForXIn !== null && windowNumberForXIn > 0)
-          ) {
+          ) 
+          if (altCampMember.get(memberName)) {
             windowsPerMember[memberName] = {
-              windows: 1, // Overwrites the 0.5 from x-alt
+              windows: 1.5, // Include the 0.5 from x-alt
               message: messageContent,
               xClaim: true,
               xKill: true,
@@ -200,7 +201,18 @@ export const channelMessagesToWindows = (
               timestamp: getDateDataFromUnixTimeStamp(
                 message.createdTimestamp
               ).toString(),
-            };
+              } 
+            } else {
+              windowsPerMember[memberName] = {
+                windows: 1, // Overwrites the 0.5 from x-alt
+                message: messageContent,
+                xClaim: true,
+                xKill: true,
+                checkForError: false,
+                timestamp: getDateDataFromUnixTimeStamp(
+                  message.createdTimestamp
+                ).toString(),
+              };
             // eg "x forgot" "x-forgot"
           } else if (
             messageContent.includes("x") &&
