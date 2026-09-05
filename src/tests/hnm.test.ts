@@ -708,7 +708,7 @@ test("Nov13 KA Alt Camp Test", async (t) => {
 
   t.deepEqual(parsedWindowsPerMember, {
     Tarnish: {
-      windows: 1,
+      windows: 1.5,
       message: "x",
       xClaim: true,
       xKill: true,

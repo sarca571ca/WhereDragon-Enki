@@ -179,45 +179,57 @@ export const channelMessagesToWindows = (
                     memberName = xAltOutFor;
                 }
 
-                if (!windowsPerMember[memberName] || (windowsPerMember[memberName] && altCampMember.get(memberName) && !messageContent.includes("alt"))) {
-                    const windowNumberForXIn = extractNumberAfterX(messageContent);
-                    // eg "x"
-                    // todo: add admin :greencheck: check for scouts
-                    if (
-                        (xInFor && !xAltFor) ||
-                        messageContent === "x" ||
-                        (messageContent.includes("x") && !messageContent.includes("x-alt") &&
-                            (messageContent.includes("scout") ||
-                                messageContent.includes("tod"))) ||
-                        (windowNumberForXIn !== null && windowNumberForXIn > 0)
-                    ) {
-                        windowsPerMember[memberName] = {
-                            windows: 1, // Overwrites the 0.5 from x-alt
-                            message: messageContent,
-                            xClaim: true,
-                            xKill: true,
-                            checkForError: false,
-                            timestamp: getDateDataFromUnixTimeStamp(
-                                message.createdTimestamp
-                            ).toString(),
-                        };
-                        // eg "x forgot" "x-forgot"
-                    } else if (
-                        messageContent.includes("x") &&
-                        messageContent.includes("forgot")
-                    ) {
-                        windowsPerMember[memberName] = {
-                            windows: 1,
-                            xClaim: true,
-                            xKill: true,
-                            message: messageContent,
-                            checkForError: true,
-                            timestamp: getDateDataFromUnixTimeStamp(
-                                message.createdTimestamp
-                            ).toString(),
-                        };
-                    }
-                }
+        if (!windowsPerMember[memberName] || (windowsPerMember[memberName] && altCampMember.get(memberName) && !messageContent.includes("alt"))) {
+          const windowNumberForXIn = extractNumberAfterX(messageContent);
+          // eg "x"
+          // todo: add admin :greencheck: check for scouts
+          if (
+            (xInFor && !xAltFor) ||
+            messageContent === "x" ||
+            (messageContent.includes("x") && !messageContent.includes("x-alt") &&
+              (messageContent.includes("scout") ||
+                messageContent.includes("tod"))) ||
+            (windowNumberForXIn !== null && windowNumberForXIn > 0)
+          ) 
+          if (altCampMember.get(memberName)) {
+            windowsPerMember[memberName] = {
+              windows: 1.5, // Include the 0.5 from x-alt
+              message: messageContent,
+              xClaim: true,
+              xKill: true,
+              checkForError: false,
+              timestamp: getDateDataFromUnixTimeStamp(
+                message.createdTimestamp
+              ).toString(),
+              } 
+            } else {
+              windowsPerMember[memberName] = {
+                windows: 1, // Overwrites the 0.5 from x-alt
+                message: messageContent,
+                xClaim: true,
+                xKill: true,
+                checkForError: false,
+                timestamp: getDateDataFromUnixTimeStamp(
+                  message.createdTimestamp
+                ).toString(),
+              };
+            // eg "x forgot" "x-forgot"
+          } else if (
+            messageContent.includes("x") &&
+            messageContent.includes("forgot")
+          ) {
+            windowsPerMember[memberName] = {
+              windows: 1,
+              xClaim: true,
+              xKill: true,
+              message: messageContent,
+              checkForError: true,
+              timestamp: getDateDataFromUnixTimeStamp(
+                message.createdTimestamp
+              ).toString(),
+            };
+          }
+        }
 
                 if (!windowsPerMember[memberName]) {
                     const windowNumberForXAlt = extractNumberAfterXAlt(messageContent);
