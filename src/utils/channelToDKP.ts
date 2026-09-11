@@ -1189,6 +1189,9 @@ export function extractMHNMPartOfChannelName(text: string): string {
         "shi",
         "sim",
         "beh",
+        "cer",
+        "hyd",
+        "khi",
     ];
 
     for (const word of words) {

@@ -6,7 +6,10 @@ export type HNMType =
   | "Adamantoise"
   | "KA"
   | "KV"
-  | "Tiamat";
+  | "Tiamat"
+  | "Cerberus"
+  | "Hydra"
+  | "Khimaira";
 
 export type HNMTypeChannelKeys =
   | null
@@ -21,7 +24,10 @@ export type HNMTypeChannelKeys =
   | "shi"
   | "sim"
   | "beh"
-  | "bs";
+  | "bs"
+  | "cer"
+  | "hyd"
+  | "khi";
 
 export const HNMTypeChannelKeyToSheetStringMap: {
   [key: string]: string;
@@ -38,6 +44,9 @@ export const HNMTypeChannelKeyToSheetStringMap: {
   vrtra: "Vrtra",
   jorm: "Jorm",
   bs: "Bloodsucker",
+  cer: "Cerberus",
+  hyd: "Hydra",
+  khi: "Khimaira",
 };
 
 export const KingHNMTypeChannelKeyToSheetStringMap: {
