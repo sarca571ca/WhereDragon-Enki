@@ -1099,7 +1099,7 @@ test("Tiamat Channel To DKP - 'x - job' input validation - no sleep available, m
             xKill: true,
             timestamp: "2024-11-06 14:06:33",
         },
-                Cordia: {
+        Cordia: {
             windows: 1,
             message:
                 "x-blu",
