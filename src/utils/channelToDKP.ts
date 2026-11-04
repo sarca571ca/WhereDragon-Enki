@@ -110,17 +110,17 @@ const getMessageType: (message: string) => XMsgType = (message) => {
 };
 
 export const validJobXinPattern =
-    /^x.*?(scout|tod|blm|rdm|whm|rng|sam|nin|mnk|war|bst|drk|pld|brd|smn|drg|thf)\b/i;
+    /^x.*?(scout|tod|blm|rdm|whm|rng|sam|nin|mnk|war|bst|drk|pld|brd|smn|drg|thf|blu|cor|pup)\b/i;
 export const validJobXAltinPattern =
-    /^x-alt.*?(scout|tod|blm|rdm|whm|rng|sam|nin|mnk|war|bst|drk|pld|brd|smn|drg|thf)\b/i;
+    /^x-alt.*?(scout|tod|blm|rdm|whm|rng|sam|nin|mnk|war|bst|drk|pld|brd|smn|drg|thf|blu|cor|pup)\b/i;
 export const validJobXinNoPaddingPattern =
-    /^x-*?(blm|rdm|whm|rng|sam|nin|mnk|war|bst|drk|pld|brd|smn|drg|thf)\b$/i;
+    /^x-*?(blm|rdm|whm|rng|sam|nin|mnk|war|bst|drk|pld|brd|smn|drg|thf|blu|cor|pup)\b$/i;
 export const validJobXinSpacePaddingPattern =
-    /^x\s-\s*?(blm|rdm|whm|rng|sam|nin|mnk|war|bst|drk|pld|brd|smn|drg|thf)\b$/i;
+    /^x\s-\s*?(blm|rdm|whm|rng|sam|nin|mnk|war|bst|drk|pld|brd|smn|drg|thf|blu|cor|pup)\b$/i;
 export const validJobXAltinNoPaddingPattern =
-    /^x\s-\salt\s-\s*?(blm|rdm|whm|rng|sam|nin|mnk|war|bst|drk|pld|brd|smn|drg|thf)\b$/i;
+    /^x\s-\salt\s-\s*?(blm|rdm|whm|rng|sam|nin|mnk|war|bst|drk|pld|brd|smn|drg|thf|blu|cor|pup)\b$/i;
 export const validJobXAltinSpacePaddingPattern =
-    /^x\s-alt-\s*?(blm|rdm|whm|rng|sam|nin|mnk|war|bst|drk|pld|brd|smn|drg|thf)\b$/i;
+    /^x\s-alt-\s*?(blm|rdm|whm|rng|sam|nin|mnk|war|bst|drk|pld|brd|smn|drg|thf|blu|cor|pup)\b$/i;
 export const validXKillPatternTiamat =
     /x.*?(kill.*?(?:\b[a-z]{3}\b)|(?:\b[a-z]{3}\b).*?kill)/i;
 export const validXAltKillPatternTiamat =
