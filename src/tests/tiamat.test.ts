@@ -1099,6 +1099,33 @@ test("Tiamat Channel To DKP - 'x - job' input validation - no sleep available, m
             xKill: true,
             timestamp: "2024-11-06 14:06:33",
         },
+        Cordia: {
+            windows: 1,
+            message:
+                "x-blu",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 14:06:33",
+        },
+        Naiko: {
+            windows: 1,
+            message:
+                "x-cor",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 14:06:33",
+        },
+        Kanryu: {
+            windows: 1,
+            message:
+                "x-pup",
+            checkForError: false,
+            xClaim: true,
+            xKill: true,
+            timestamp: "2024-11-06 14:06:33",
+        },
     });
 
     t.end();
